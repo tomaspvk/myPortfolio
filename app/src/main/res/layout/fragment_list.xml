@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_gravity="center_vertical"
-            android:text="Ticker"
+            android:text="$1000"
             style="@style/TextAppearance.AppCompat.Large"/>
 
     </LinearLayout>
@@ -29,13 +29,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Refresh data"/>
-
-    <Button
-        android:id="@+id/add_asset"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Add asset"/>
 
     <View
         android:layout_width="match_parent"
@@ -54,8 +47,15 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Asset list"
+            android:text="My Portfolio"
             style="@style/TextAppearance.AppCompat.Headline"/>
+
+        <Button
+            android:id="@+id/add_asset"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Add asset"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@android:id/list"
