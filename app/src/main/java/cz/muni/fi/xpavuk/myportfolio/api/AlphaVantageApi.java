@@ -6,6 +6,7 @@ package cz.muni.fi.xpavuk.myportfolio.api;
  */
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import cz.muni.fi.xpavuk.myportfolio.BuildConfig;
 import okhttp3.HttpUrl;
@@ -41,7 +42,9 @@ public class AlphaVantageApi {
                         Request request = requestBuilder.build();
                         return chain.proceed(request);
                     }
-                });
+                })
+                .connectTimeout(30, TimeUnit.SECONDS) // connect timeout
+                .readTimeout(30, TimeUnit.SECONDS); // socket timeout
 
         if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();

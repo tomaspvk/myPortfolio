@@ -1,6 +1,6 @@
 package cz.muni.fi.xpavuk.myportfolio.api;
 
-import cz.muni.fi.xpavuk.myportfolio.model.StockIntraday;
+import cz.muni.fi.xpavuk.myportfolio.model.ApiResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -13,9 +13,9 @@ import retrofit2.http.Query;
 public interface AlphaVantageService {
 
     @GET("/query")
-    Call<StockIntraday> getIntraDayForSymbol(@Query("function") String function,
-                                             @Query("symbol") String symbol,
-                                             @Query("interval") String interval);
+    Call<ApiResponse> getIntraDayForSymbol(@Query("function") String function,
+                                           @Query("symbol") String symbol,
+                                           @Query("interval") String interval);
 
     // https://developer.github.com/v3/activity/watching/
 //    @GET("repos/{username}/{reponame}/subscribers")
