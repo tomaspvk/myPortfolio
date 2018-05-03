@@ -17,8 +17,9 @@ public interface AlphaVantageService {
                                            @Query("symbol") String symbol,
                                            @Query("interval") String interval);
 
-    // https://developer.github.com/v3/activity/watching/
-//    @GET("repos/{username}/{reponame}/subscribers")
-//    Call<List<User>> getWatcherList(@Path("username") String username, @Path("reponame") String reponame);
-
+    @GET("/query")
+    Call<ApiResponse> getIntraDayForCryptoSymbol(@Query("function") String function,
+                                                 @Query("symbol") String symbol,
+                                                 @Query("interval") String interval,
+                                                 @Query("market") String market);
 }

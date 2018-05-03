@@ -22,4 +22,22 @@
         style="@style/TextAppearance.AppCompat.Large"
         tools:text="Placeholder stock"/>
 
+    <TextView
+        android:id="@+id/current_price"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="16dp"
+        android:layout_gravity="right"
+        style="@style/TextAppearance.AppCompat.Large"
+        tools:text="Placeholder stock"/>
+
+    <TextView
+        android:id="@+id/change"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="16dp"
+        android:layout_gravity="right"
+        style="@style/TextAppearance.AppCompat.Large"
+        tools:text="Placeholder stock"/>
+
 </LinearLayout>

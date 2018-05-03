@@ -1,4 +1,5 @@
 package cz.muni.fi.xpavuk.myportfolio.adapter;
+
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -10,8 +11,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.muni.fi.xpavuk.myportfolio.R;
-import cz.muni.fi.xpavuk.myportfolio.model.MetaData;
-import cz.muni.fi.xpavuk.myportfolio.model.StockData;
+import cz.muni.fi.xpavuk.myportfolio.model.Stock;
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmRecyclerViewAdapter;
 
@@ -20,11 +20,11 @@ import io.realm.RealmRecyclerViewAdapter;
  * date: 30.4.2018
  */
 
-public class StockAdapter extends RealmRecyclerViewAdapter<MetaData, StockAdapter.ViewHolder>{
+public class StockAdapter extends RealmRecyclerViewAdapter<Stock, StockAdapter.ViewHolder>{
 
     private Context mContext;
 
-    public StockAdapter(Context context, @Nullable OrderedRealmCollection<MetaData> data) {
+    public StockAdapter(Context context, @Nullable OrderedRealmCollection<Stock> data) {
         super(data, true);
         mContext = context;
     }
@@ -44,12 +44,14 @@ public class StockAdapter extends RealmRecyclerViewAdapter<MetaData, StockAdapte
      */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        MetaData data = getItem(position);
+        Stock stock = getItem(position);
 //        Glide.with(mContext)
 //                .load(user.avatarUrl)
 //                .into(holder.mAvatar);
         // TODO: fixnut
-        holder.mTicker.setText(data._2Symbol);
+        holder.mTicker.setText(stock.stockName);
+        holder.mCurrentPrice.setText(String.valueOf(stock.currentPrice));
+        holder.mChange.setText(stock.getIncreaseDecreaseText());
     }
 
     /**
@@ -61,6 +63,10 @@ public class StockAdapter extends RealmRecyclerViewAdapter<MetaData, StockAdapte
 //        ImageView mAvatar;
         @BindView(R.id.ticker)
         TextView mTicker;
+        @BindView(R.id.current_price)
+        TextView mCurrentPrice;
+        @BindView(R.id.change)
+        TextView mChange;
 
         public ViewHolder(View itemView) {
             super(itemView);

@@ -7,7 +7,7 @@ package cz.muni.fi.xpavuk.myportfolio.api;
 
 public class ApiEnum {
     public enum FUNCTION {
-        TIME_SERIES_INTRADAY, TIME_SERIES_DAILY
+        TIME_SERIES_INTRADAY, TIME_SERIES_DAILY, DIGITAL_CURRENCY_INTRADAY, DIGITAL_CURRENCY_DAILY
     }
 
     public enum INTERVAL {
