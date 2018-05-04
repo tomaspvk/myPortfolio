@@ -8,13 +8,13 @@ import com.google.gson.annotations.SerializedName;
 
 public class StockData {
 
-    @SerializedName("1. open")
+    @SerializedName(value="1. open", alternate="1a. open (EUR)")
     public Double open;
-    @SerializedName("2. high")
+    @SerializedName(value="2. high", alternate="2a. high (EUR)")
     public Double high;
-    @SerializedName("3. low")
+    @SerializedName(value="3. low", alternate="3a. low (EUR)")
     public Double low;
-    @SerializedName("4. close")
+    @SerializedName(value="4. close", alternate="4a. close (EUR)")
     public Double close;
     @SerializedName("5. volume")
     public Double volume;

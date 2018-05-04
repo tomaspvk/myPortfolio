@@ -12,17 +12,12 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import butterknife.OnClick;
 import cz.muni.fi.xpavuk.myportfolio.adapter.StockAdapter;
 
-import com.bumptech.glide.Glide;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,14 +25,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cz.muni.fi.xpavuk.myportfolio.R;
-import cz.muni.fi.xpavuk.myportfolio.adapter.StockAdapter;
 import cz.muni.fi.xpavuk.myportfolio.api.AlphaVantageApi;
-import cz.muni.fi.xpavuk.myportfolio.api.ApiEnum;
-import cz.muni.fi.xpavuk.myportfolio.model.ApiResponse;
-import cz.muni.fi.xpavuk.myportfolio.model.MetaData;
+import cz.muni.fi.xpavuk.myportfolio.model.ApiStockResponse;
 import cz.muni.fi.xpavuk.myportfolio.model.Stock;
 import io.realm.Realm;
-import cz.muni.fi.xpavuk.myportfolio.model.StockData;
 
 import io.realm.RealmResults;
 import retrofit2.Call;
@@ -45,6 +36,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static cz.muni.fi.xpavuk.myportfolio.api.ApiEnum.FUNCTION;
+import static cz.muni.fi.xpavuk.myportfolio.api.ApiEnum.FUNCTION.DIGITAL_CURRENCY_DAILY;
 import static cz.muni.fi.xpavuk.myportfolio.api.ApiEnum.FUNCTION.TIME_SERIES_DAILY;
 import static cz.muni.fi.xpavuk.myportfolio.utils.StockParser.getStockFromStockApiResponse;
 
@@ -85,7 +77,7 @@ public class StockListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
         mUnbinder = ButterKnife.bind(this, view);
 
-        RealmResults<Stock> ownedStocks = mRealm.where(Stock.class).findAll();
+        RealmResults<Stock> ownedStocks = mRealm.where(Stock.class).and().equalTo("isValidStock", true).findAll();
         mAdapter = new StockAdapter(getContext(), ownedStocks);
         mList.setAdapter(mAdapter);
         mList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -112,12 +104,18 @@ public class StockListFragment extends Fragment {
     }
 
     private void addStockToList(@NonNull String ticker, FUNCTION function, String interval) {
-        Call<ApiResponse> stockCall = mAlphaVantageApi.getService()
-                .getIntraDayForSymbol(function.toString(), ticker, interval);
-        stockCall.enqueue(new Callback<ApiResponse>() {
+        Call<ApiStockResponse> stockCall;
+        if (function == FUNCTION.DIGITAL_CURRENCY_DAILY) {
+            stockCall = mAlphaVantageApi.getService()
+                    .getIntraDayForCryptoSymbol(function.toString(), ticker, interval, "EUR");
+        } else {
+            stockCall = mAlphaVantageApi.getService()
+                    .getIntraDayForSymbol(function.toString(), ticker, interval);
+        }
+        stockCall.enqueue(new Callback<ApiStockResponse>() {
 
             @Override
-            public void onResponse(@NonNull Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
+            public void onResponse(@NonNull Call<ApiStockResponse> call, @NonNull Response<ApiStockResponse> response) {
                 Stock stock = getStockFromStockApiResponse(response.body());
                 stock.isCrypto = function == FUNCTION.DIGITAL_CURRENCY_DAILY;
                 saveResult(Collections.singletonList(stock));
@@ -127,11 +125,13 @@ public class StockListFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(@NonNull Call<ApiResponse> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<ApiStockResponse> call, @NonNull Throwable t) {
                 t.printStackTrace();
             }
         });
     }
+
+    FUNCTION selectedAssetType = FUNCTION.TIME_SERIES_DAILY;
 
     @OnClick(R.id.add_asset)
     public void onAddAssetClicked() {
@@ -142,9 +142,29 @@ public class StockListFragment extends Fragment {
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
 
+        final CharSequence[] items = {" Stock "," Crypto "};
+        //FUNCTION selectedAssetType = FUNCTION.TIME_SERIES_DAILY;
+        builder.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int item) {
+
+                switch(item)
+                {
+                    case 0:
+                        selectedAssetType = TIME_SERIES_DAILY;
+                        break;
+                    case 1:
+
+                        selectedAssetType = DIGITAL_CURRENCY_DAILY;
+                        break;
+                }
+                //alertDialog1.dismiss();
+            }
+        });
+
         builder.setPositiveButton("OK", (dialog, which) -> {
             String m_Text = input.getText().toString();
-            addStockToList(m_Text, TIME_SERIES_DAILY, null/*INTERVAL.MIN_15.getValue()*/);
+            addStockToList(m_Text, selectedAssetType, null/*INTERVAL.MIN_15.getValue()*/);
         });
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
@@ -154,10 +174,13 @@ public class StockListFragment extends Fragment {
     @OnClick(R.id.refresh)
     public void onRefreshClicked()
     {
-        RealmResults<Stock> ownedStocks = mRealm.where(Stock.class).findAll();
+        RealmResults<Stock> ownedStocks = mRealm.where(Stock.class).and().equalTo("isValidStock", true).findAll();
         for(Stock stock : ownedStocks)
         {
-            addStockToList(stock.stockName, TIME_SERIES_DAILY, null);
+            if (stock.isCrypto)
+                addStockToList(stock.stockName, DIGITAL_CURRENCY_DAILY, null);
+            else
+                addStockToList(stock.stockName, TIME_SERIES_DAILY, null);
         }
     }
 

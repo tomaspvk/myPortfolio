@@ -8,12 +8,12 @@ package cz.muni.fi.xpavuk.myportfolio.model;
 import com.google.gson.annotations.SerializedName;
 import java.util.HashMap;
 
-public class ApiResponse  {
+public class ApiStockResponse {
 
     @SerializedName("Meta Data")
     public MetaData metaData;
 
-    @SerializedName("Time Series (Daily)") //(Time Series 15min)
+    @SerializedName(value="Time Series (Daily)", alternate="Time Series (Digital Currency Daily)") //(Time Series 15min)
     public HashMap<String, StockData> timeSeries;
 
     @SerializedName("Error Message")

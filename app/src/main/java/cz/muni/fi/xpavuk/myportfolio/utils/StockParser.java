@@ -1,13 +1,12 @@
 package cz.muni.fi.xpavuk.myportfolio.utils;
 
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import cz.muni.fi.xpavuk.myportfolio.model.HistoricalData;
 import cz.muni.fi.xpavuk.myportfolio.model.Stock;
-import cz.muni.fi.xpavuk.myportfolio.model.ApiResponse;
+import cz.muni.fi.xpavuk.myportfolio.model.ApiStockResponse;
 import io.realm.RealmList;
 
 /**
@@ -17,31 +16,36 @@ import io.realm.RealmList;
 
 public class StockParser {
 
-    public static Stock getStockFromStockApiResponse(ApiResponse apiResponse) {
+    public static Stock getStockFromStockApiResponse(ApiStockResponse apiStockResponse) {
         Stock stock = new Stock();
-        if (apiResponse.errorMessage != null) {
+        if (apiStockResponse.errorMessage != null) {
             stock.isValidStock = false;
             return stock;
         }
         stock.isValidStock = true;
 
-        String lastRefreshedString = apiResponse.metaData._3LastRefreshed.split("\\s+")[0];
+        String lastRefreshedString = apiStockResponse.metaData._3LastRefreshed.split("\\s+")[0];
 
-        stock.stockName = apiResponse.metaData._2Symbol.toUpperCase();
-        stock.currentPrice = (double)Math.round(apiResponse.timeSeries.get(lastRefreshedString).close*100) / 100;
-        stock.closed = apiResponse.metaData._3LastRefreshed.split("\\s+").length <= 1;
-        stock.openingPrice = (double)Math.round(apiResponse.timeSeries.get(lastRefreshedString).open*100) / 100;
-        stock.changeInPrice = getChangeInPrice(lastRefreshedString, stock.currentPrice, apiResponse);
-        stock.intradayLowPrice = (double)Math.round(apiResponse.timeSeries.get(lastRefreshedString).low*100) / 100;
-        stock.intradayHighPrice = (double)Math.round(apiResponse.timeSeries.get(lastRefreshedString).high*100) / 100;
+        if (apiStockResponse.metaData._1Information.contains("Digital Currency"))
+             stock.isCrypto = true;
+        else
+            stock.isCrypto = false;
+
+        stock.stockName = apiStockResponse.metaData._2Symbol.toUpperCase();
+        stock.currentPrice = (double)Math.round(apiStockResponse.timeSeries.get(lastRefreshedString).close*100) / 100;
+        stock.closed = apiStockResponse.metaData._3LastRefreshed.split("\\s+").length <= 1;
+        stock.openingPrice = (double)Math.round(apiStockResponse.timeSeries.get(lastRefreshedString).open*100) / 100;
+        stock.changeInPrice = getChangeInPrice(lastRefreshedString, stock.currentPrice, apiStockResponse);
+        stock.intradayLowPrice = (double)Math.round(apiStockResponse.timeSeries.get(lastRefreshedString).low*100) / 100;
+        stock.intradayHighPrice = (double)Math.round(apiStockResponse.timeSeries.get(lastRefreshedString).high*100) / 100;
         stock.lastUpdatedDate = lastRefreshedString;
         stock.timeStamp = System.currentTimeMillis();
 
         RealmList<HistoricalData> stockDatePriceList = new RealmList<>();
-        for (String key : apiResponse.timeSeries.keySet()) {
+        for (String key : apiStockResponse.timeSeries.keySet()) {
             HistoricalData data = new HistoricalData();
             data.key = key;
-            data.value = apiResponse.timeSeries.get(key).close;
+            data.value = apiStockResponse.timeSeries.get(key).close;
             stockDatePriceList.add(data);
         }
         stock.historicalData = stockDatePriceList;
@@ -49,12 +53,12 @@ public class StockParser {
         return stock;
     }
 
-    private static double getChangeInPrice(String lastRefreshed, double currentPrice, ApiResponse apiResponse) {
+    private static double getChangeInPrice(String lastRefreshed, double currentPrice, ApiStockResponse apiStockResponse) {
         Date todayDate = convertStringToDate(lastRefreshed);
         todayDate.setTime(todayDate.getTime() - 2); // one day before
-        if (!apiResponse.timeSeries.containsKey(convertDateToString(todayDate)))
+        if (!apiStockResponse.timeSeries.containsKey(convertDateToString(todayDate)))
             return 0d;
-        return currentPrice - apiResponse.timeSeries.get(convertDateToString(todayDate)).close;
+        return currentPrice - apiStockResponse.timeSeries.get(convertDateToString(todayDate)).close;
     }
 
     private static Date convertStringToDate(String dateString) {
