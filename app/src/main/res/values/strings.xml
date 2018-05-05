@@ -7,4 +7,6 @@
     <string name="updated_single_minute_ago">updated a min ago</string>
     <string name="add_asset_action">"Add asset to your portfolio"</string>
     <string name="refresh_data_action">"Refresh data"</string>
+    <string name="menu_asset_edit">Edit</string>
+    <string name="menu_asset_delete">Delete</string>
 </resources>

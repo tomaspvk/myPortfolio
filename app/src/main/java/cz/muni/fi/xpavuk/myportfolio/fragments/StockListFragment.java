@@ -92,7 +92,6 @@ public class StockListFragment extends Fragment implements AssetInterface{
         mList.setAdapter(mAdapter);
         mList.setLayoutManager(new LinearLayoutManager(getContext()));
         mList.setHasFixedSize(true);
-
         return view;
     }
 
