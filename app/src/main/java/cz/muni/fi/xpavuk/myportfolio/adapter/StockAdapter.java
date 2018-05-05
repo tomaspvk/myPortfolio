@@ -4,13 +4,16 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnLongClick;
 import cz.muni.fi.xpavuk.myportfolio.R;
 import cz.muni.fi.xpavuk.myportfolio.model.Stock;
 import io.realm.OrderedRealmCollection;
@@ -60,7 +63,7 @@ public class StockAdapter extends RealmRecyclerViewAdapter<Stock, StockAdapter.V
     /**
      * Reusable ViewHolder objects.
      */
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder{
 
 //        @BindView(R.id.avatar)
 //        ImageView mAvatar;
@@ -74,6 +77,22 @@ public class StockAdapter extends RealmRecyclerViewAdapter<Stock, StockAdapter.V
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        @OnLongClick
+        boolean onLongClick(View view){
+            PopupMenu popup = new PopupMenu(view.getContext(), view);
+            popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+            popup.setOnMenuItemClickListener(menuItem -> {
+                switch(menuItem.getItemId()){
+                    case(R.id.menu_asset_edit):
+                        System.out.println(getAdapterPosition());
+                        return true;
+                    default: return false;
+                }
+            });
+            popup.show();
+            return true;
         }
     }
 }
