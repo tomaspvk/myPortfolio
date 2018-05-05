@@ -1,30 +1,19 @@
 package cz.muni.fi.xpavuk.myportfolio.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Intent;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import butterknife.OnCheckedChanged;
-import butterknife.OnClick;
+import cz.muni.fi.xpavuk.myportfolio.activities.AssetInterface;
 import cz.muni.fi.xpavuk.myportfolio.adapter.StockAdapter;
 
 import java.util.Collections;
@@ -55,7 +44,7 @@ import static cz.muni.fi.xpavuk.myportfolio.utils.StockParser.getStockFromStockA
  * date: 30.4.2018
  */
 
-public class StockListFragment extends Fragment {
+public class StockListFragment extends Fragment implements AssetInterface{
 
     private static final String TAG = StockListFragment.class.getSimpleName();
 
@@ -66,8 +55,8 @@ public class StockListFragment extends Fragment {
     private Unbinder mUnbinder;
     @BindView(android.R.id.list)
     RecyclerView mList;
-    @BindView(R.id.portfolio_value)
-    TextView mPortfolioValue;
+//    @BindView(R.id.portfolio_value)
+//    TextView mPortfolioValue;
 
 
     public static StockListFragment newInstance() {
@@ -79,6 +68,7 @@ public class StockListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mAlphaVantageApi = new AlphaVantageApi();
         mRealm = Realm.getDefaultInstance();
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -139,8 +129,8 @@ public class StockListFragment extends Fragment {
         });
     }
 
-    @OnClick(R.id.add_asset)
-    public void onAddAssetClicked() {
+    //@OnClick(R.id.add_asset)
+    public void action() {
         AddAssetDialogFragment addAssetDialog = new AddAssetDialogFragment();
         addAssetDialog.setTargetFragment(this, 0);
         addAssetDialog.show(getFragmentManager(), "add_asset_dialog");
@@ -159,8 +149,8 @@ public class StockListFragment extends Fragment {
         }
     }
 
-    @OnClick(R.id.refresh)
-    public void onRefreshClicked()
+    //@OnClick(R.id.refresh)
+    public void onRefresh()
     {
         RealmResults<Stock> ownedStocks = mRealm.where(Stock.class).and().equalTo("isValidStock", true).findAll();
         for(Stock stock : ownedStocks)
