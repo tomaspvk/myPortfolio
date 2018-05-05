@@ -3,6 +3,7 @@ package cz.muni.fi.xpavuk.myportfolio.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,9 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnLongClick;
 import cz.muni.fi.xpavuk.myportfolio.R;
+import cz.muni.fi.xpavuk.myportfolio.fragments.StockListFragment;
 import cz.muni.fi.xpavuk.myportfolio.model.Stock;
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmRecyclerViewAdapter;
@@ -24,10 +27,12 @@ import io.realm.RealmRecyclerViewAdapter;
 public class StockAdapter extends RealmRecyclerViewAdapter<Stock, StockAdapter.ViewHolder>{
 
     private Context mContext;
+    private StockListFragment fragment;
 
-    public StockAdapter(Context context, @Nullable OrderedRealmCollection<Stock> data) {
+    public StockAdapter(Context context, @Nullable OrderedRealmCollection<Stock> data, StockListFragment fragment) {
         super(data, true);
         mContext = context;
+        this.fragment = fragment;
     }
 
     /**
@@ -77,6 +82,23 @@ public class StockAdapter extends RealmRecyclerViewAdapter<Stock, StockAdapter.V
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        @OnLongClick
+        boolean onLongClick(View view){
+            PopupMenu popup = new PopupMenu(view.getContext(), view);
+            popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+            popup.setOnMenuItemClickListener(menuItem -> {
+                switch(menuItem.getItemId()){
+                    case(R.id.menu_asset_delete):
+                        fragment.delete(getItem(getAdapterPosition()));
+                        notifyDataSetChanged();
+                        return true;
+                    default: return false;
+                }
+            });
+            popup.show();
+            return true;
         }
     }
 }

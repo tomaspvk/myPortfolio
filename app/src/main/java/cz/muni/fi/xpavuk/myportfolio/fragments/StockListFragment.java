@@ -2,6 +2,7 @@ package cz.muni.fi.xpavuk.myportfolio.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -79,7 +80,7 @@ public class StockListFragment extends Fragment implements AssetInterface{
         mUnbinder = ButterKnife.bind(this, view);
 
         RealmResults<Stock> ownedStocks = mRealm.where(Stock.class).and().equalTo("isValidStock", true).findAll();
-        mAdapter = new StockAdapter(getContext(), ownedStocks);
+        mAdapter = new StockAdapter(getContext(), ownedStocks, StockListFragment.this);
         mList.setAdapter(mAdapter);
         mList.setLayoutManager(new LinearLayoutManager(getContext()));
         mList.setHasFixedSize(true);
@@ -173,6 +174,14 @@ public class StockListFragment extends Fragment implements AssetInterface{
                 realm.close();
             }
         }
+    }
+
+    public boolean delete(final Stock stock){
+        mRealm.executeTransaction(realm -> {
+            RealmResults<Stock> result = realm.where(Stock.class).equalTo("stockName",stock.getStockName()).findAll();
+            result.deleteAllFromRealm();
+        });
+        return true;
     }
 
 }
