@@ -11,58 +11,45 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/portfolio_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_gravity="center_vertical"
-            android:text="$1000"
-            style="@style/TextAppearance.AppCompat.Large"/>
+        <!--<TextView-->
+            <!--android:id="@+id/portfolio_value"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginStart="16dp"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:text="$1000"-->
+            <!--style="@style/TextAppearance.AppCompat.Large"/>-->
 
     </LinearLayout>
 
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:layout_marginTop="16dp"-->
+        <!--android:layout_marginBottom="16dp"-->
+        <!--android:background="#FF999999"-->
+        <!--/>-->
 
-    <Button
-        android:id="@+id/refresh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Refresh data"/>
-
-    <Button
-        android:id="@+id/add_asset"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Add asset"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="#FF999999"/>
-
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/stocks_wrapper"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="My Portfolio"
-            style="@style/TextAppearance.AppCompat.Headline"/>
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="My Portfolio"-->
+            <!--style="@style/TextAppearance.AppCompat.Headline"/>-->
 
         <android.support.v7.widget.RecyclerView
             android:id="@android:id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="?android:attr/actionBarSize"
+            />
 
-    </LinearLayout>
+    </FrameLayout>
 
 </LinearLayout>

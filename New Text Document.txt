@@ -1,0 +1,4 @@
+AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+        String title = "1000$";
+        activity.setTitle(title);

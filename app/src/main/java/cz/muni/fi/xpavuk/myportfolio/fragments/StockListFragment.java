@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import butterknife.OnClick;
+import cz.muni.fi.xpavuk.myportfolio.activities.AssetInterface;
 import cz.muni.fi.xpavuk.myportfolio.adapter.StockAdapter;
 
 import com.bumptech.glide.Glide;
@@ -53,7 +54,7 @@ import static cz.muni.fi.xpavuk.myportfolio.utils.StockParser.getStockFromStockA
  * date: 30.4.2018
  */
 
-public class StockListFragment extends Fragment {
+public class StockListFragment extends Fragment implements AssetInterface{
 
     private static final String TAG = StockListFragment.class.getSimpleName();
 
@@ -64,8 +65,8 @@ public class StockListFragment extends Fragment {
     private Unbinder mUnbinder;
     @BindView(android.R.id.list)
     RecyclerView mList;
-    @BindView(R.id.portfolio_value)
-    TextView mPortfolioValue;
+//    @BindView(R.id.portfolio_value)
+//    TextView mPortfolioValue;
 
     public static StockListFragment newInstance() {
         return new StockListFragment();
@@ -76,6 +77,7 @@ public class StockListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mAlphaVantageApi = new AlphaVantageApi();
         mRealm = Realm.getDefaultInstance();
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -133,26 +135,26 @@ public class StockListFragment extends Fragment {
         });
     }
 
-    @OnClick(R.id.add_asset)
-    public void onAddAssetClicked() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Ticker");
+//    @OnClick(R.id.add_asset)
+//    public void onAddAssetClicked() {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+//        builder.setTitle("Ticker");
+//
+//        final EditText input = new EditText(getContext());
+//        input.setInputType(InputType.TYPE_CLASS_TEXT);
+//        builder.setView(input);
+//
+//        builder.setPositiveButton("OK", (dialog, which) -> {
+//            String m_Text = input.getText().toString();
+//            addStockToList(m_Text, TIME_SERIES_DAILY, null/*INTERVAL.MIN_15.getValue()*/);
+//        });
+//        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+//w
+//        builder.show();
+//    }
 
-        final EditText input = new EditText(getContext());
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
-
-        builder.setPositiveButton("OK", (dialog, which) -> {
-            String m_Text = input.getText().toString();
-            addStockToList(m_Text, TIME_SERIES_DAILY, null/*INTERVAL.MIN_15.getValue()*/);
-        });
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-
-        builder.show();
-    }
-
-    @OnClick(R.id.refresh)
-    public void onRefreshClicked()
+    //@OnClick(R.id.refresh)
+    public void onRefresh()
     {
         RealmResults<Stock> ownedStocks = mRealm.where(Stock.class).findAll();
         for(Stock stock : ownedStocks)
@@ -173,4 +175,21 @@ public class StockListFragment extends Fragment {
         }
     }
 
+    //@OnClick(R.id.addAsset)
+    public void action() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Ticker");
+
+        final EditText input = new EditText(getContext());
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            String m_Text = input.getText().toString();
+            addStockToList(m_Text, TIME_SERIES_DAILY, null/*INTERVAL.MIN_15.getValue()*/);
+        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+        builder.show();
+    }
 }

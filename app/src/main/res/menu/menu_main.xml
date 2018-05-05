@@ -2,9 +2,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="cz.muni.fi.xpavuk.myportfolio.activities.MainActivity">
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+
+    <item android:id="@+id/action_addAsset"
+        android:orderInCategory="200"
+        android:title="@string/add_asset_action"
+        android:icon="@android:drawable/ic_input_add"
+        app:showAsAction="ifRoom"/>
+
+    <item android:id="@+id/action_refreshData"
+        android:orderInCategory="300"
+        android:title="@string/refresh_data_action"
+        android:icon="@drawable/reload"
+        app:showAsAction="ifRoom"/>
+
+
 </menu>
