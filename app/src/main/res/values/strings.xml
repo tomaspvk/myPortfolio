@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">myPortfolio</string>
     <string name="action_settings">Settings</string>
+    <string name="updated_some_seconds_ago">updated just now</string>
+    <string name="updated_seconds_ago">updated %d seconds ago</string>
+    <string name="updated_minutes_ago">updated %d mins ago</string>
+    <string name="updated_single_minute_ago">updated a min ago</string>
 </resources>
