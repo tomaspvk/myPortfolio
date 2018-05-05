@@ -104,7 +104,7 @@ public class StockListFragment extends Fragment implements AssetInterface{
         mRealm.close();
     }
 
-    private void addStockToList(@NonNull String ticker, FUNCTION function, String interval) {
+    private void addStockToList(@NonNull String ticker, FUNCTION function, String interval, int quantity) {
         Call<ApiStockResponse> stockCall;
         if (function == FUNCTION.DIGITAL_CURRENCY_DAILY) {
             stockCall = mAlphaVantageApi.getService()
@@ -119,6 +119,7 @@ public class StockListFragment extends Fragment implements AssetInterface{
             public void onResponse(@NonNull Call<ApiStockResponse> call, @NonNull Response<ApiStockResponse> response) {
                 Stock stock = getStockFromStockApiResponse(response.body());
                 stock.isCrypto = function == FUNCTION.DIGITAL_CURRENCY_DAILY;
+                stock.ownedQuantity = quantity;
                 saveResult(Collections.singletonList(stock));
             }
 
@@ -142,10 +143,10 @@ public class StockListFragment extends Fragment implements AssetInterface{
         if (resultCode == Activity.RESULT_OK) {
             Bundle extras = data.getExtras();
             String ticker = extras.getString("ticker");
-            String quantity = extras.getString("quantity");
+            int quantity = Integer.parseInt(extras.getString("quantity"));
             String type = extras.getString("type");
 
-            addStockToList(ticker, Enum.valueOf(ApiEnum.FUNCTION.class, type), null);
+            addStockToList(ticker, Enum.valueOf(ApiEnum.FUNCTION.class, type), null, quantity);
         }
     }
 
@@ -156,9 +157,9 @@ public class StockListFragment extends Fragment implements AssetInterface{
         for(Stock stock : ownedStocks)
         {
             if (stock.isCrypto)
-                addStockToList(stock.stockName, DIGITAL_CURRENCY_DAILY, null);
+                addStockToList(stock.stockName, DIGITAL_CURRENCY_DAILY, null, stock.ownedQuantity);
             else
-                addStockToList(stock.stockName, TIME_SERIES_DAILY, null);
+                addStockToList(stock.stockName, TIME_SERIES_DAILY, null, stock.ownedQuantity);
         }
     }
 

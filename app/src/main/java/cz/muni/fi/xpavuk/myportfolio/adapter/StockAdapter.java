@@ -55,6 +55,7 @@ public class StockAdapter extends RealmRecyclerViewAdapter<Stock, StockAdapter.V
         holder.mChange.setText(stock.getIncreaseDecreaseText());
         int changeColor = stock.changeInPrice > 0 ? Color.GREEN : Color.RED;
         holder.mChange.setTextColor(changeColor);
+        holder.mQuantity.setText(String.valueOf(stock.ownedQuantity));
     }
 
     /**
@@ -70,6 +71,8 @@ public class StockAdapter extends RealmRecyclerViewAdapter<Stock, StockAdapter.V
         TextView mCurrentPrice;
         @BindView(R.id.change)
         TextView mChange;
+        @BindView(R.id.quantity)
+        TextView mQuantity;
 
         public ViewHolder(View itemView) {
             super(itemView);

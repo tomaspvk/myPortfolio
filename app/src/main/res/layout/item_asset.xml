@@ -40,4 +40,13 @@
         style="@style/TextAppearance.AppCompat.Large"
         tools:text="Placeholder stock"/>
 
+    <TextView
+        android:id="@+id/quantity"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="16dp"
+        android:layout_gravity="end"
+        style="@style/TextAppearance.AppCompat.Large"
+        tools:text="Placeholder stock"/>
+
 </LinearLayout>
