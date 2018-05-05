@@ -178,7 +178,7 @@ public class StockListFragment extends Fragment implements AssetInterface{
 
     public boolean delete(final Stock stock){
         mRealm.executeTransaction(realm -> {
-            RealmResults<Stock> result = realm.where(Stock.class).equalTo("stockName",stock.getStockName()).findAll();
+            RealmResults<Stock> result = realm.where(Stock.class).equalTo("stockName",stock.stockName).findAll();
             result.deleteAllFromRealm();
         });
         return true;

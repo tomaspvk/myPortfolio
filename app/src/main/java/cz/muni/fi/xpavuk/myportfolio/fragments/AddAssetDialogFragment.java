@@ -17,6 +17,7 @@ import android.widget.RadioGroup;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import cz.muni.fi.xpavuk.myportfolio.R;
 import cz.muni.fi.xpavuk.myportfolio.api.ApiEnum;
 
@@ -62,6 +63,8 @@ public class AddAssetDialogFragment extends DialogFragment {
 
         mDialogRadioGroup.addView(rbStock);
         mDialogRadioGroup.addView(rbCrypto);
+        mDialogRadioGroup.check(rbStock.getId());
+
         mDialogRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             int childCount = group.getChildCount();
             for (int x = 0; x < childCount; x++) {
@@ -85,5 +88,10 @@ public class AddAssetDialogFragment extends DialogFragment {
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
         return builder.create();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState); // <-- must call this if you want to retain dialogFragment upon rotation
     }
 }

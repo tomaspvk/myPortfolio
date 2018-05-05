@@ -38,10 +38,6 @@ public class Stock extends RealmObject {
 
     }
 
-    public String getStockName(){
-        return stockName;
-    }
-
     public String getupdatedAgoString() {
         int secDiff = (int) (System.currentTimeMillis() - timeStamp) / 1000;
         if (secDiff <= 60) {
