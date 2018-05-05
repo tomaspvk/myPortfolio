@@ -1,6 +1,7 @@
 package cz.muni.fi.xpavuk.myportfolio.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -52,6 +53,8 @@ public class StockAdapter extends RealmRecyclerViewAdapter<Stock, StockAdapter.V
         holder.mTicker.setText(stock.stockName);
         holder.mCurrentPrice.setText(String.valueOf(stock.currentPrice));
         holder.mChange.setText(stock.getIncreaseDecreaseText());
+        int changeColor = stock.changeInPrice > 0 ? Color.GREEN : Color.RED;
+        holder.mChange.setTextColor(changeColor);
     }
 
     /**

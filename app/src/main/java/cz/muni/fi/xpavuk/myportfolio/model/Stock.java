@@ -34,7 +34,8 @@ public class Stock extends RealmObject {
     public double currentOwnedValue;
 
     public String getIncreaseDecreaseText() {
-        return changeInPrice > 0 ? "+" + changeInPrice : "-" + changeInPrice;
+        return changeInPrice > 0 ? "\u25B2" + changeInPrice : "\u25BC" + changeInPrice;
+
     }
 
     public String getupdatedAgoString() {

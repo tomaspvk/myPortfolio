@@ -1,6 +1,12 @@
 package cz.muni.fi.xpavuk.myportfolio.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.Intent;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -13,8 +19,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import cz.muni.fi.xpavuk.myportfolio.adapter.StockAdapter;
 
@@ -26,6 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cz.muni.fi.xpavuk.myportfolio.R;
 import cz.muni.fi.xpavuk.myportfolio.api.AlphaVantageApi;
+import cz.muni.fi.xpavuk.myportfolio.api.ApiEnum;
 import cz.muni.fi.xpavuk.myportfolio.model.ApiStockResponse;
 import cz.muni.fi.xpavuk.myportfolio.model.Stock;
 import io.realm.Realm;
@@ -58,6 +68,7 @@ public class StockListFragment extends Fragment {
     RecyclerView mList;
     @BindView(R.id.portfolio_value)
     TextView mPortfolioValue;
+
 
     public static StockListFragment newInstance() {
         return new StockListFragment();
@@ -107,7 +118,7 @@ public class StockListFragment extends Fragment {
         Call<ApiStockResponse> stockCall;
         if (function == FUNCTION.DIGITAL_CURRENCY_DAILY) {
             stockCall = mAlphaVantageApi.getService()
-                    .getIntraDayForCryptoSymbol(function.toString(), ticker, interval, "EUR");
+                    .getIntraDayForCryptoSymbol(function.toString(), ticker, interval, "USD");
         } else {
             stockCall = mAlphaVantageApi.getService()
                     .getIntraDayForSymbol(function.toString(), ticker, interval);
@@ -119,9 +130,6 @@ public class StockListFragment extends Fragment {
                 Stock stock = getStockFromStockApiResponse(response.body());
                 stock.isCrypto = function == FUNCTION.DIGITAL_CURRENCY_DAILY;
                 saveResult(Collections.singletonList(stock));
-//                Stock stock = new Stock();
-//                stock.stockName = response.body().metaData._2Symbol.toUpperCase();
-//                saveResult(Arrays.asList(stock));
             }
 
             @Override
@@ -131,44 +139,24 @@ public class StockListFragment extends Fragment {
         });
     }
 
-    FUNCTION selectedAssetType = FUNCTION.TIME_SERIES_DAILY;
-
     @OnClick(R.id.add_asset)
     public void onAddAssetClicked() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Ticker");
+        AddAssetDialogFragment addAssetDialog = new AddAssetDialogFragment();
+        addAssetDialog.setTargetFragment(this, 0);
+        addAssetDialog.show(getFragmentManager(), "add_asset_dialog");
+    }
 
-        final EditText input = new EditText(getContext());
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            Bundle extras = data.getExtras();
+            String ticker = extras.getString("ticker");
+            String quantity = extras.getString("quantity");
+            String type = extras.getString("type");
 
-        final CharSequence[] items = {" Stock "," Crypto "};
-        //FUNCTION selectedAssetType = FUNCTION.TIME_SERIES_DAILY;
-        builder.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
-
-            public void onClick(DialogInterface dialog, int item) {
-
-                switch(item)
-                {
-                    case 0:
-                        selectedAssetType = TIME_SERIES_DAILY;
-                        break;
-                    case 1:
-
-                        selectedAssetType = DIGITAL_CURRENCY_DAILY;
-                        break;
-                }
-                //alertDialog1.dismiss();
-            }
-        });
-
-        builder.setPositiveButton("OK", (dialog, which) -> {
-            String m_Text = input.getText().toString();
-            addStockToList(m_Text, selectedAssetType, null/*INTERVAL.MIN_15.getValue()*/);
-        });
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-
-        builder.show();
+            addStockToList(ticker, Enum.valueOf(ApiEnum.FUNCTION.class, type), null);
+        }
     }
 
     @OnClick(R.id.refresh)
