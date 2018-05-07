@@ -6,22 +6,6 @@
     android:padding="16dp"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <!--<TextView-->
-            <!--android:id="@+id/portfolio_value"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginStart="16dp"-->
-            <!--android:layout_gravity="center_vertical"-->
-            <!--android:text="$1000"-->
-            <!--style="@style/TextAppearance.AppCompat.Large"/>-->
-
-    </LinearLayout>
-
     <!--<View-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="1dp"-->
@@ -36,6 +20,16 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/portfolio_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="5dp"
+        android:layout_gravity="top"
+        android:textSize="30sp"
+        style="@style/TextAppearance.AppCompat.Large"/>
 
         <!--<TextView-->
             <!--android:layout_width="match_parent"-->

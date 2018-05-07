@@ -8,4 +8,12 @@
     <string name="add_asset_action">"Add asset to your portfolio"</string>
     <string name="refresh_data_action">"Refresh data"</string>
     <string name="menu_asset_delete">Delete</string>
+
+    <string name="showing_stock_data_for">Showing stock data for</string>
+    <string name="low_price">today\'s low</string>
+    <string name="high_price">today\'s high</string>
+    <string name="open_price">open price</string>
+    <string name="market_closed">(market closed)</string>
+    <string name="stock_price">Stock price</string>
+    <string name="stock_history">Stock price history</string>
 </resources>

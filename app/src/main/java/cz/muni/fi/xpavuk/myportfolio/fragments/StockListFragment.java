@@ -56,8 +56,8 @@ public class StockListFragment extends Fragment implements AssetInterface{
     private Unbinder mUnbinder;
     @BindView(android.R.id.list)
     RecyclerView mList;
-//    @BindView(R.id.portfolio_value)
-//    TextView mPortfolioValue;
+    @BindView(R.id.portfolio_value)
+    TextView mPortfolioValue;
 
 
     public static StockListFragment newInstance() {
@@ -70,6 +70,7 @@ public class StockListFragment extends Fragment implements AssetInterface{
         mAlphaVantageApi = new AlphaVantageApi();
         mRealm = Realm.getDefaultInstance();
         setHasOptionsMenu(true);
+        //setRetainInstance(true);
     }
 
     @Nullable
@@ -88,9 +89,27 @@ public class StockListFragment extends Fragment implements AssetInterface{
         return view;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setPortfolioValue();
+    }
+
+
     private void setPortfolioValue()
     {
-
+        RealmResults<Stock> ownedStocks = mRealm.where(Stock.class).and().equalTo("isValidStock", true).findAll();
+        double totalBalance = 0;
+        double totalSpent = 0;
+        for(Stock stock : ownedStocks)
+        {
+            totalSpent += stock.totalSpentAmount;
+            totalBalance += stock.currentPrice * stock.ownedQuantity;
+        }
+        double totalSpentRounded = (double)Math.round(totalSpent*100) / 100;
+        double totalBalanceRounded = (double)Math.round(totalBalance*100) / 100;
+        String value = "$" + String.valueOf(totalBalanceRounded) + " (" + totalSpentRounded + ")";
+        mPortfolioValue.setText(value);
     }
 
     @Override
@@ -105,7 +124,7 @@ public class StockListFragment extends Fragment implements AssetInterface{
         mRealm.close();
     }
 
-    private void addStockToList(@NonNull String ticker, FUNCTION function, String interval, int quantity) {
+    private void addStockToList(@NonNull String ticker, FUNCTION function, String interval, int quantity, boolean isRefresh) {
         Call<ApiStockResponse> stockCall;
         if (function == FUNCTION.DIGITAL_CURRENCY_DAILY) {
             stockCall = mAlphaVantageApi.getService()
@@ -119,9 +138,16 @@ public class StockListFragment extends Fragment implements AssetInterface{
             @Override
             public void onResponse(@NonNull Call<ApiStockResponse> call, @NonNull Response<ApiStockResponse> response) {
                 Stock stock = getStockFromStockApiResponse(response.body());
+                if (!isRefresh) {
+                    stock.totalSpentAmount = (double)Math.round(stock.currentPrice * quantity *100)/100;
+                } else {
+                    stock.totalSpentAmount = mRealm.where(Stock.class).and().equalTo("stockName", stock.stockName).findFirst().totalSpentAmount;
+                }
                 stock.isCrypto = function == FUNCTION.DIGITAL_CURRENCY_DAILY;
                 stock.ownedQuantity = quantity;
+
                 saveResult(Collections.singletonList(stock));
+                setPortfolioValue();
             }
 
             @Override
@@ -147,7 +173,7 @@ public class StockListFragment extends Fragment implements AssetInterface{
             int quantity = Integer.parseInt(extras.getString("quantity"));
             String type = extras.getString("type");
 
-            addStockToList(ticker, Enum.valueOf(ApiEnum.FUNCTION.class, type), null, quantity);
+            addStockToList(ticker, Enum.valueOf(ApiEnum.FUNCTION.class, type), null, quantity, false);
         }
     }
 
@@ -158,10 +184,11 @@ public class StockListFragment extends Fragment implements AssetInterface{
         for(Stock stock : ownedStocks)
         {
             if (stock.isCrypto)
-                addStockToList(stock.stockName, DIGITAL_CURRENCY_DAILY, null, stock.ownedQuantity);
+                addStockToList(stock.stockName, DIGITAL_CURRENCY_DAILY, null, stock.ownedQuantity, true);
             else
-                addStockToList(stock.stockName, TIME_SERIES_DAILY, null, stock.ownedQuantity);
+                addStockToList(stock.stockName, TIME_SERIES_DAILY, null, stock.ownedQuantity, true);
         }
+        setPortfolioValue();
     }
 
     private void saveResult(final List<Stock> stocks) {
