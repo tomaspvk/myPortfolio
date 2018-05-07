@@ -2,7 +2,9 @@ package cz.muni.fi.xpavuk.myportfolio.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +16,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnLongClick;
 import cz.muni.fi.xpavuk.myportfolio.R;
+import cz.muni.fi.xpavuk.myportfolio.activities.MainActivity;
+import cz.muni.fi.xpavuk.myportfolio.fragments.AssetDetailFragment;
 import cz.muni.fi.xpavuk.myportfolio.fragments.StockListFragment;
 import cz.muni.fi.xpavuk.myportfolio.model.Stock;
 import io.realm.OrderedRealmCollection;
@@ -58,10 +62,36 @@ public class StockAdapter extends RealmRecyclerViewAdapter<Stock, StockAdapter.V
         holder.mTicker.setText(stock.stockName);
         holder.mCurrentPrice.setText(String.valueOf(stock.currentPrice));
         holder.mChange.setText(stock.getIncreaseDecreaseText());
-        int changeColor = stock.changeInPrice > 0 ? Color.GREEN : Color.RED;
+        int changeColor = stock.changeInPrice > 0 ? Color.parseColor("#ff99cc00") : Color.parseColor("#ffff4444");
         holder.mChange.setTextColor(changeColor);
         holder.mQuantity.setText(String.valueOf(stock.ownedQuantity));
+
+        holder.mTicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragmentJump(stock);
+            }
+        });
     }
+
+    private void fragmentJump(Stock mStockSelected) {
+        Fragment detailFragment = new AssetDetailFragment();
+        Bundle mBundle = new Bundle();
+        mBundle.putSerializable("selected_key", mStockSelected);
+        detailFragment.setArguments(mBundle);
+        switchContent(fragment.getId(), detailFragment);
+    }
+
+    private void switchContent(int id, Fragment fragment) {
+        if (mContext == null)
+            return;
+        if (mContext instanceof MainActivity) {
+            MainActivity mainActivity = (MainActivity) mContext;
+            mainActivity.switchContent(id, fragment);
+        }
+
+    }
+
 
     /**
      * Reusable ViewHolder objects.

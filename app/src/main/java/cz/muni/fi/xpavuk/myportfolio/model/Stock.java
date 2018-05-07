@@ -5,13 +5,18 @@ package cz.muni.fi.xpavuk.myportfolio.model;
  * date: 28.4.2018
  */
 
+import android.content.Context;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+
 import cz.muni.fi.xpavuk.myportfolio.App;
 import cz.muni.fi.xpavuk.myportfolio.R;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class Stock extends RealmObject {
+public class Stock extends RealmObject implements Serializable {
 
     @PrimaryKey
     public String stockName;
@@ -38,18 +43,18 @@ public class Stock extends RealmObject {
 
     }
 
-    public String getupdatedAgoString() {
+    public String getupdatedAgoString(Context context) {
         int secDiff = (int) (System.currentTimeMillis() - timeStamp) / 1000;
         if (secDiff <= 60) {
             if (secDiff <= 5)
-                return App.getContext().getString(R.string.updated_some_seconds_ago);
+                return context.getString(R.string.updated_some_seconds_ago);
             else
-                return App.getContext().getString(R.string.updated_seconds_ago, secDiff);
+                return context.getString(R.string.updated_seconds_ago, secDiff);
         } else {
             if (secDiff / 60 == 1)
-                return App.getContext().getString(R.string.updated_single_minute_ago);
+                return context.getString(R.string.updated_single_minute_ago);
             else
-                return App.getContext().getString(R.string.updated_minutes_ago, secDiff / 60);
+                return context.getString(R.string.updated_minutes_ago, secDiff / 60);
         }
     }
 }

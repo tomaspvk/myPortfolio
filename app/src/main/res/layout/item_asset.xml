@@ -28,8 +28,7 @@
         android:layout_height="match_parent"
         android:layout_marginStart="16dp"
         android:layout_gravity="end"
-        style="@style/TextAppearance.AppCompat.Large"
-        tools:text="Placeholder stock"/>
+        style="@style/TextAppearance.AppCompat.Large"/>
 
     <TextView
         android:id="@+id/change"
@@ -37,8 +36,7 @@
         android:layout_height="match_parent"
         android:layout_marginStart="16dp"
         android:layout_gravity="end"
-        style="@style/TextAppearance.AppCompat.Large"
-        tools:text="Placeholder stock"/>
+        style="@style/TextAppearance.AppCompat.Large"/>
 
     <TextView
         android:id="@+id/quantity"
@@ -46,7 +44,6 @@
         android:layout_height="match_parent"
         android:layout_marginStart="16dp"
         android:layout_gravity="end"
-        style="@style/TextAppearance.AppCompat.Large"
-        tools:text="Placeholder stock"/>
+        style="@style/TextAppearance.AppCompat.Large"/>
 
 </LinearLayout>
