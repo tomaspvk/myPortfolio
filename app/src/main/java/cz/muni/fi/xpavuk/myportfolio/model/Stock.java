@@ -8,9 +8,6 @@ package cz.muni.fi.xpavuk.myportfolio.model;
 import android.content.Context;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-
-import cz.muni.fi.xpavuk.myportfolio.App;
 import cz.muni.fi.xpavuk.myportfolio.R;
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -36,7 +33,6 @@ public class Stock extends RealmObject implements Serializable {
     public long timeStamp;
     public int ownedQuantity;
     public double totalSpentAmount;
-    public double currentOwnedValue;
 
     public String getIncreaseDecreaseText() {
         return changeInPrice > 0 ? "\u25B2" + changeInPrice : "\u25BC" + changeInPrice;

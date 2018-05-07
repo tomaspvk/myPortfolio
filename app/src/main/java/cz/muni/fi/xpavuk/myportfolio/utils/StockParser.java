@@ -35,7 +35,6 @@ public class StockParser {
         stock.currentPrice = (double)Math.round(apiStockResponse.timeSeries.get(lastRefreshedString).close*100) / 100;
         stock.closed = apiStockResponse.metaData._3LastRefreshed.split("\\s+").length <= 1;
         stock.openingPrice = (double)Math.round(apiStockResponse.timeSeries.get(lastRefreshedString).open*100) / 100;
-//        stock.changeInPrice = (double)Math.round(getChangeInPrice(lastRefreshedString, stock.currentPrice, apiStockResponse)*100) / 100;
         stock.changeInPrice = (double)Math.round((stock.currentPrice - apiStockResponse.timeSeries.get(lastRefreshedString).open)*100)/100;
         stock.intradayLowPrice = (double)Math.round(apiStockResponse.timeSeries.get(lastRefreshedString).low*100) / 100;
         stock.intradayHighPrice = (double)Math.round(apiStockResponse.timeSeries.get(lastRefreshedString).high*100) / 100;

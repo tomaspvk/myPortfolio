@@ -70,6 +70,7 @@ public class StockListFragment extends Fragment implements AssetInterface{
         mAlphaVantageApi = new AlphaVantageApi();
         mRealm = Realm.getDefaultInstance();
         setHasOptionsMenu(true);
+        //setRetainInstance(true);
     }
 
     @Nullable
@@ -85,9 +86,15 @@ public class StockListFragment extends Fragment implements AssetInterface{
         mList.setLayoutManager(new LinearLayoutManager(getContext()));
         mList.setHasFixedSize(true);
 
-        setPortfolioValue();
         return view;
     }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setPortfolioValue();
+    }
+
 
     private void setPortfolioValue()
     {
@@ -99,8 +106,8 @@ public class StockListFragment extends Fragment implements AssetInterface{
             totalSpent += stock.totalSpentAmount;
             totalBalance += stock.currentPrice * stock.ownedQuantity;
         }
-        double totalSpentRounded = (double)(Math.round(totalSpent)*100) / 100;
-        double totalBalanceRounded = (double)(Math.round(totalBalance)*100) / 100;
+        double totalSpentRounded = (double)Math.round(totalSpent*100) / 100;
+        double totalBalanceRounded = (double)Math.round(totalBalance*100) / 100;
         String value = "$" + String.valueOf(totalBalanceRounded) + " (" + totalSpentRounded + ")";
         mPortfolioValue.setText(value);
     }

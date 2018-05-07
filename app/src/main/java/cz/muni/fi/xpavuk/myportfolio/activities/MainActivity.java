@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO: FIND OUT WHY INIT IN APP.JAVA IS NOT WORKING
         Realm.init(this);
 
         super.onCreate(savedInstanceState);
