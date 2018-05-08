@@ -16,7 +16,6 @@
     <TextView
         android:id="@+id/ticker"
         android:layout_marginEnd="5dp"
-        android:layout_wei
         style="@style/TextAppearance.AppCompat.Large"
         tools:text="Placeholder stock"/>
 
