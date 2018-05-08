@@ -16,4 +16,6 @@
     <string name="market_closed">(market closed)</string>
     <string name="stock_price">Stock price</string>
     <string name="stock_history">Stock price history</string>
+    <string name="description">Info</string>
+    <string name="portfolio_total">Portfolio value:</string>
 </resources>

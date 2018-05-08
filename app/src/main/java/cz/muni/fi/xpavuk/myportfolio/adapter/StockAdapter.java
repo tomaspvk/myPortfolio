@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -66,7 +68,7 @@ public class StockAdapter extends RealmRecyclerViewAdapter<Stock, StockAdapter.V
         holder.mChange.setTextColor(changeColor);
         holder.mQuantity.setText(String.valueOf(stock.ownedQuantity));
 
-        holder.mTicker.setOnClickListener(new View.OnClickListener() {
+        holder.mInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 fragmentJump(stock);
@@ -108,6 +110,8 @@ public class StockAdapter extends RealmRecyclerViewAdapter<Stock, StockAdapter.V
         TextView mChange;
         @BindView(R.id.quantity)
         TextView mQuantity;
+        @BindView(R.id.show_info)
+        ImageView mInfo;
 
         public ViewHolder(View itemView) {
             super(itemView);
