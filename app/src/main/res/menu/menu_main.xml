@@ -6,14 +6,6 @@
     <item android:id="@+id/action_addAsset"
         android:orderInCategory="200"
         android:title="@string/add_asset_action"
-        android:icon="@android:drawable/ic_input_add"
+        android:icon="@drawable/icon_plus"
         app:showAsAction="ifRoom"/>
-
-    <item android:id="@+id/action_refreshData"
-        android:orderInCategory="300"
-        android:title="@string/refresh_data_action"
-        android:icon="@drawable/reload"
-        app:showAsAction="ifRoom"/>
-
-
 </menu>

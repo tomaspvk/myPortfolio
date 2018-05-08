@@ -4,12 +4,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
+import butterknife.BindView;
 import cz.muni.fi.xpavuk.myportfolio.R;
 import cz.muni.fi.xpavuk.myportfolio.fragments.StockListFragment;
 import io.realm.Realm;
@@ -21,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar topToolbar;
     private AssetInterface listener;
     private StockListFragment slf = StockListFragment.newInstance();
-
     public void setListener(AssetInterface listener)
     {
         this.listener = listener ;
@@ -67,9 +67,6 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.action_addAsset:
                 listener.action();
-                return true;
-            case R.id.action_refreshData:
-                listener.onRefresh();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

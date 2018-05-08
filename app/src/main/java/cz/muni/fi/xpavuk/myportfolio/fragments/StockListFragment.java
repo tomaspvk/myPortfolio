@@ -2,11 +2,13 @@ package cz.muni.fi.xpavuk.myportfolio.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,6 +30,7 @@ import cz.muni.fi.xpavuk.myportfolio.api.AlphaVantageApi;
 import cz.muni.fi.xpavuk.myportfolio.api.ApiEnum;
 import cz.muni.fi.xpavuk.myportfolio.model.ApiStockResponse;
 import cz.muni.fi.xpavuk.myportfolio.model.Stock;
+import cz.muni.fi.xpavuk.myportfolio.utils.SimpleDividerItemDecoration;
 import io.realm.Realm;
 
 import io.realm.RealmResults;
@@ -45,7 +48,7 @@ import static cz.muni.fi.xpavuk.myportfolio.utils.StockParser.getStockFromStockA
  * date: 30.4.2018
  */
 
-public class StockListFragment extends Fragment implements AssetInterface{
+public class StockListFragment extends Fragment implements AssetInterface, SwipeRefreshLayout.OnRefreshListener{
 
     private static final String TAG = StockListFragment.class.getSimpleName();
 
@@ -58,7 +61,8 @@ public class StockListFragment extends Fragment implements AssetInterface{
     RecyclerView mList;
     @BindView(R.id.portfolio_value)
     TextView mPortfolioValue;
-
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     public static StockListFragment newInstance() {
         return new StockListFragment();
@@ -86,6 +90,10 @@ public class StockListFragment extends Fragment implements AssetInterface{
         mList.setLayoutManager(new LinearLayoutManager(getContext()));
         mList.setHasFixedSize(true);
 
+        swipeRefreshLayout.setOnRefreshListener(this);
+        mList.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
+        //Refreshing
+        //swipeRefreshLayout.post(this::run); //Uncomment this
         return view;
     }
 
@@ -125,6 +133,7 @@ public class StockListFragment extends Fragment implements AssetInterface{
     }
 
     private void addStockToList(@NonNull String ticker, FUNCTION function, String interval, int quantity, boolean isRefresh) {
+        swipeRefreshLayout.setRefreshing(true);
         Call<ApiStockResponse> stockCall;
         if (function == FUNCTION.DIGITAL_CURRENCY_DAILY) {
             stockCall = mAlphaVantageApi.getService()
@@ -147,11 +156,13 @@ public class StockListFragment extends Fragment implements AssetInterface{
                 stock.ownedQuantity = quantity;
 
                 saveResult(Collections.singletonList(stock));
-                setPortfolioValue();
+                final Handler handler = new Handler();
+                onItemsLoadComplete();
             }
 
             @Override
             public void onFailure(@NonNull Call<ApiStockResponse> call, @NonNull Throwable t) {
+                swipeRefreshLayout.setRefreshing(false);
                 t.printStackTrace();
             }
         });
@@ -177,7 +188,7 @@ public class StockListFragment extends Fragment implements AssetInterface{
         }
     }
 
-    //@OnClick(R.id.refresh)
+    @Override
     public void onRefresh()
     {
         RealmResults<Stock> ownedStocks = mRealm.where(Stock.class).and().equalTo("isValidStock", true).findAll();
@@ -188,7 +199,11 @@ public class StockListFragment extends Fragment implements AssetInterface{
             else
                 addStockToList(stock.stockName, TIME_SERIES_DAILY, null, stock.ownedQuantity, true);
         }
+    }
+
+    private void onItemsLoadComplete(){
         setPortfolioValue();
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     private void saveResult(final List<Stock> stocks) {
@@ -208,7 +223,12 @@ public class StockListFragment extends Fragment implements AssetInterface{
             RealmResults<Stock> result = realm.where(Stock.class).equalTo("stockName",stock.stockName).findAll();
             result.deleteAllFromRealm();
         });
+        onRefresh(); //handle like event maybe?
         return true;
     }
 
+    private void run() {
+        swipeRefreshLayout.setRefreshing(true);
+        onRefresh();
+    }
 }
