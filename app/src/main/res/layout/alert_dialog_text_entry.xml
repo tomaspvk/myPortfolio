@@ -22,25 +22,39 @@
         android:layout_marginBottom="4dp"
         android:orientation="horizontal">
     </RadioGroup>
-    <EditText
-        android:id="@+id/dialog_asset_name"
-        android:inputType="text"
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/dialog_asset_name_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"
-        android:hint="Ticker" />
-    <EditText
-        android:id="@+id/dialog_asset_quantity"
-        android:inputType="text"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/dialog_asset_name"
+            android:inputType="text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="4dp"
+            android:hint="Ticker" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/dialog_asset_quantity_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="16dp"
-        android:fontFamily="sans-serif"
-        android:hint="Quantity"/>
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/dialog_asset_quantity"
+            android:inputType="numberDecimal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="sans-serif"
+            android:hint="Quantity"/>
+    </android.support.design.widget.TextInputLayout>
 </LinearLayout>

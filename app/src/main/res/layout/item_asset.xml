@@ -2,40 +2,81 @@
 <GridLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:padding="4dp"
     android:columnCount="5"
     >
 
-    <!--<ImageView-->
-        <!--android:id="@+id/avatar"-->
-        <!--android:layout_width="50dp"-->
-        <!--android:layout_height="50dp"-->
-        <!--tools:src="@mipmap/ic_launcher"/>-->
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/basic_info_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/small_margin"
+        android:elevation="4dp"
+        card_view:cardCornerRadius="4dp">
 
-    <TextView
-        android:id="@+id/ticker"
-        android:layout_marginEnd="5dp"
-        style="@style/TextAppearance.AppCompat.Large"
-        tools:text="Placeholder stock"/>
+            <RelativeLayout
+                android:id="@+id/ticker_section"
+                android:padding="@dimen/small_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/current_price"
-        style="@style/TextAppearance.AppCompat.Large"/>
+                <TextView
+                    android:id="@+id/ticker"
+                    android:layout_marginEnd="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/TextAppearance.AppCompat.Large"
+                    tools:text="Placeholder stock"/>
 
-    <TextView
-        android:id="@+id/change"
-        style="@style/TextAppearance.AppCompat.Large"/>
+            </RelativeLayout>
 
-    <TextView
-        android:id="@+id/quantity"
-        android:layout_marginStart="5dp"
-        style="@style/TextAppearance.AppCompat.Large"/>
+            <RelativeLayout
+                android:id="@+id/price_section"
+                android:padding="@dimen/small_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/ticker_section">
 
-    <ImageView
-        android:id="@+id/show_info"
-        android:src="@drawable/icon_info"
-        android:layout_gravity="end"
-        android:contentDescription="@string/description" />
+                    <TextView
+                        android:id="@+id/current_price"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:textSize="@dimen/medium_text_size" />
+
+                    <TextView
+                        android:id="@+id/change"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/current_price"
+                        android:layout_centerHorizontal="true"
+                        android:textSize="@dimen/medium_text_size" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:padding="@dimen/small_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_toEndOf="@id/price_section">
+
+                <TextView
+                    android:id="@+id/quantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/medium_text_size"/>
+
+                <ImageView
+                    android:id="@+id/show_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_info"
+                    android:layout_below="@id/quantity"
+                    android:contentDescription="@string/description" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 
 </GridLayout>

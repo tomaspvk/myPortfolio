@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import cz.muni.fi.xpavuk.myportfolio.activities.AssetInterface;
 import cz.muni.fi.xpavuk.myportfolio.adapter.StockAdapter;
@@ -146,6 +147,13 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
 
             @Override
             public void onResponse(@NonNull Call<ApiStockResponse> call, @NonNull Response<ApiStockResponse> response) {
+                if (response.body() == null || response.body().errorMessage != null) {
+                    swipeRefreshLayout.setRefreshing(false);
+                    String errorMessage = "Error has occured. Please check if your ticker is valid or try again.";
+                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Stock stock = getStockFromStockApiResponse(response.body());
                 if (!isRefresh) {
                     stock.totalSpentAmount = (double)Math.round(stock.currentPrice * quantity *100)/100;
@@ -185,6 +193,10 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
             String type = extras.getString("type");
 
             addStockToList(ticker, Enum.valueOf(ApiEnum.FUNCTION.class, type), null, quantity, false);
+        } else if (resultCode == Activity.RESULT_CANCELED)
+        {
+            String errorMessage = "Ticker and Quantity should not be empty.";
+            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
         }
     }
 

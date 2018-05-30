@@ -7,18 +7,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cz.muni.fi.xpavuk.myportfolio.R;
+import cz.muni.fi.xpavuk.myportfolio.activities.MainActivity;
 import cz.muni.fi.xpavuk.myportfolio.api.ApiEnum;
 
 import static cz.muni.fi.xpavuk.myportfolio.api.ApiEnum.FUNCTION.DIGITAL_CURRENCY_DAILY;
@@ -43,6 +47,12 @@ public class AddAssetDialogFragment extends DialogFragment {
     @Nullable
     @BindView(R.id.radio_group)
     RadioGroup mDialogRadioGroup;
+
+    @BindView(R.id.dialog_asset_name_wrapper)
+    TextInputLayout mAssetNameWrapper;
+    @BindView(R.id.dialog_asset_quantity_wrapper)
+    TextInputLayout mAssetQuantity;
+
 
     public static final String CHOICE_SELECTED = "type";
     public static final String TICKER_SELECTED = "ticker";
@@ -77,16 +87,25 @@ public class AddAssetDialogFragment extends DialogFragment {
 
         builder.setView(dialogView);
         builder.setPositiveButton("Add", (dialog, which) -> {
-            Intent intent = new Intent();
-            Bundle extras = new Bundle();
-            extras.putString(TICKER_SELECTED, mDialogAssetName.getText().toString());
-            extras.putString(QUANTITY_SELECTED, mDialogAssetQuantity.getText().toString());
-            extras.putString(CHOICE_SELECTED, selectedAssetType.toString());
-            intent.putExtras(extras);
-            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
+            if (!TextUtils.isEmpty(mDialogAssetName.getText()) && !TextUtils.isEmpty(mDialogAssetQuantity.getText()))
+            {
+                Intent intent = new Intent();
+                Bundle extras = new Bundle();
+                extras.putString(TICKER_SELECTED, mDialogAssetName.getText().toString());
+                extras.putString(QUANTITY_SELECTED, mDialogAssetQuantity.getText().toString());
+                extras.putString(CHOICE_SELECTED, selectedAssetType.toString());
+                intent.putExtras(extras);
+                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
+            } else
+            {
+                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, null);
+            }
         });
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
+
+        mAssetNameWrapper.setHint("Ticker");
+        mAssetQuantity.setHint("Quantity");
         return builder.create();
     }
 

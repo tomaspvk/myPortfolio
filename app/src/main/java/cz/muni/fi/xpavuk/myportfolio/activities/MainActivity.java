@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Toolbar topToolbar;
     private AssetInterface listener;
-    private StockListFragment slf = StockListFragment.newInstance();
+    private StockListFragment slf;
     public void setListener(AssetInterface listener)
     {
         this.listener = listener ;
@@ -40,13 +40,15 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {       // Important, otherwise there'd be a new Fragment created with every orientation change
             FragmentManager fragmentManager = getSupportFragmentManager();
             if (fragmentManager != null) {
+                slf = StockListFragment.newInstance();
                 fragmentManager.beginTransaction()
                         .replace(android.R.id.content,
                                 slf,
                                 StockListFragment.class.getSimpleName())
                         .commit();
             }
-        }
+        } else
+            slf = (StockListFragment) getSupportFragmentManager().findFragmentByTag(StockListFragment.class.getSimpleName());
         setListener(slf);
     }
 
