@@ -6,6 +6,6 @@
     <item android:id="@+id/action_addAsset"
         android:orderInCategory="200"
         android:title="@string/add_asset_action"
-        android:icon="@drawable/icon_plus"
+        android:icon="@drawable/ic_add_box_black_24dp"
         app:showAsAction="ifRoom"/>
 </menu>
