@@ -27,4 +27,6 @@
     <string name="stock">Akcia</string>
     <string name="crypto">Krypto</string>
     <string name="select_asset">Vybrať aktivum</string>
+    <string name="invalidstock">Vyskytla sa chyba. Prosím skontrolujte, či je zadaný symbol validný alebo skúste neskôr.</string>
+    <string name="emptystock">Zadaný symbol a množstvo nesmú byť prázdne.</string>
 </resources>

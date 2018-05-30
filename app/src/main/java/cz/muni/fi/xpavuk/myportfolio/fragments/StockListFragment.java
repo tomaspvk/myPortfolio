@@ -163,8 +163,7 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
             public void onResponse(@NonNull Call<ApiStockResponse> call, @NonNull Response<ApiStockResponse> response) {
                 if (response.body() == null || response.body().errorMessage != null) {
                     swipeRefreshLayout.setRefreshing(false);
-                    String errorMessage = "Error has occured. Please check if your ticker is valid or try again.";
-                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.invalidstock), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -213,8 +212,7 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
             }
         } else if (resultCode == Activity.RESULT_CANCELED)
         {
-            String errorMessage = "Ticker and Quantity should not be empty.";
-            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.emptystock), Toast.LENGTH_SHORT).show();
         }
     }
 

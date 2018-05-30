@@ -27,4 +27,6 @@
     <string name="stock">Stock</string>
     <string name="crypto">Crypto</string>
     <string name="select_asset">Select asset</string>
+    <string name="invalidstock">Error has occured. Please check if your ticker is valid or try again.</string>
+    <string name="emptystock">Ticker and Quantity should not be empty.</string>
 </resources>
