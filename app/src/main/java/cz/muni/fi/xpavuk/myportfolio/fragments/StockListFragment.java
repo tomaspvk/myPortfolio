@@ -94,7 +94,7 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
         swipeRefreshLayout.setOnRefreshListener(this);
         mList.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
         //Refreshing
-        //swipeRefreshLayout.post(this::run); //Uncomment this
+        swipeRefreshLayout.post(this::run); //Uncomment this
         return view;
     }
 
@@ -135,6 +135,7 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
 
     private void addStockToList(@NonNull String ticker, FUNCTION function, String interval, int quantity, boolean isRefresh) {
         swipeRefreshLayout.setRefreshing(true);
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         Call<ApiStockResponse> stockCall;
         if (function == FUNCTION.DIGITAL_CURRENCY_DAILY) {
             stockCall = mAlphaVantageApi.getService()

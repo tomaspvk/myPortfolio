@@ -18,4 +18,7 @@
     <string name="stock_history">Stock price history</string>
     <string name="description">Info</string>
     <string name="portfolio_total">Portfolio value:</string>
+    <string name="ticker">Ticker</string>
+    <string name="price">Price</string>
+    <string name="quantity">Quantity</string>
 </resources>

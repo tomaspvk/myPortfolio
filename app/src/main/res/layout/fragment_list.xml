@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="start"
-            android:text="Ticker"
+            android:text="@string/ticker"
             android:textSize="@dimen/tiny_text_size"/>
 
         <TextView
@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:text="Price"
+            android:text="@string/price"
             android:textSize="@dimen/tiny_text_size"/>
 
         <TextView
@@ -60,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Quantity"
+            android:text="@string/quantity"
             android:gravity="end"
             android:textSize="@dimen/tiny_text_size"/>
 
