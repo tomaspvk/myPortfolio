@@ -1,6 +1,7 @@
 package cz.muni.fi.xpavuk.myportfolio.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
@@ -78,6 +79,8 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
         mAlphaVantageApi = new AlphaVantageApi();
         mRealm = Realm.getDefaultInstance();
         setHasOptionsMenu(true);
+        setRetainInstance(true);
+
     }
 
     @Override
@@ -111,9 +114,6 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (mPortfolioValue == null){
-            mPortfolioValue = view.findViewById(R.id.portfolio_value);
-        }
         setPortfolioValue();
     }
 
@@ -131,6 +131,7 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
         double totalSpentRounded = (double)Math.round(totalSpent*100) / 100;
         double totalBalanceRounded = (double)Math.round(totalBalance*100) / 100;
         String value = "$" + String.valueOf(totalBalanceRounded) + " (" + totalSpentRounded + ")";
+
         mPortfolioValue.setText(value);
     }
 
@@ -171,7 +172,10 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
                 if (!isRefresh) {
                     stock.totalSpentAmount = (double)Math.round(stock.currentPrice * quantity *100)/100;
                 } else {
-                    stock.totalSpentAmount = mRealm.where(Stock.class).and().equalTo("stockName", stock.stockName).findFirst().totalSpentAmount;
+                    Stock savedField = mRealm.where(Stock.class).and().equalTo("stockName", stock.stockName).findFirst();
+                    if (savedField != null) {
+                        stock.totalSpentAmount = savedField.totalSpentAmount;
+                    }
                 }
                 stock.isCrypto = function == FUNCTION.DIGITAL_CURRENCY_DAILY;
                 stock.ownedQuantity = quantity;
@@ -189,7 +193,6 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
         });
     }
 
-    //@OnClick(R.id.add_asset)
     public void action() {
         AddAssetDialogFragment addAssetDialog = new AddAssetDialogFragment();
         addAssetDialog.setTargetFragment(this, 0);
@@ -201,11 +204,13 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             Bundle extras = data.getExtras();
-            String ticker = extras.getString("ticker");
-            double quantity = Double.parseDouble(extras.getString("quantity").replace(',', '.'));
-            String type = extras.getString("type");
+            if (extras != null) {
+                String ticker = extras.getString("ticker");
+                double quantity = Double.parseDouble(extras.getString("quantity").replace(',', '.'));
+                String type = extras.getString("type");
 
-            addStockToList(ticker, Enum.valueOf(ApiEnum.FUNCTION.class, type), null, quantity, false);
+                addStockToList(ticker, Enum.valueOf(ApiEnum.FUNCTION.class, type), null, quantity, false);
+            }
         } else if (resultCode == Activity.RESULT_CANCELED)
         {
             String errorMessage = "Ticker and Quantity should not be empty.";

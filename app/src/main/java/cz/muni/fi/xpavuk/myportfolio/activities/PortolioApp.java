@@ -12,7 +12,6 @@ public class PortolioApp extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
-        ButterKnife.setDebug(true);
         Realm.init(this);
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/OpenSans-Regular.ttf")

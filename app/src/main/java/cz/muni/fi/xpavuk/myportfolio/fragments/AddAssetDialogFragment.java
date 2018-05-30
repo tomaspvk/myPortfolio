@@ -85,9 +85,9 @@ public class AddAssetDialogFragment extends DialogFragment {
             {
                 Intent intent = new Intent();
                 Bundle extras = new Bundle();
-                extras.putString(getString(R.string.ticker), mDialogAssetName.getText().toString());
-                extras.putString(getString(R.string.quantity), mDialogAssetQuantity.getText().toString());
-                extras.putString(getString(R.string.choice_selected), selectedAssetType.toString());
+                extras.putString("ticker", mDialogAssetName.getText().toString());
+                extras.putString("quantity", mDialogAssetQuantity.getText().toString());
+                extras.putString("type", selectedAssetType.toString());
                 intent.putExtras(extras);
                 getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
             } else
@@ -97,9 +97,9 @@ public class AddAssetDialogFragment extends DialogFragment {
         });
         builder.setNegativeButton(getString(R.string.cancel_button), (dialog, which) -> dialog.cancel());
 
-
         mAssetNameWrapper.setHint(getString(R.string.ticker));
         mAssetQuantity.setHint(getString(R.string.quantity));
+
         return builder.create();
     }
 
