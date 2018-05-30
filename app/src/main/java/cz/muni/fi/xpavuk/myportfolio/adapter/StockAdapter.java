@@ -57,10 +57,9 @@ public class StockAdapter extends RealmRecyclerViewAdapter<Stock, StockAdapter.V
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Stock stock = getItem(position);
-//        Glide.with(mContext)
-//                .load(user.avatarUrl)
-//                .into(holder.mAvatar);
-        // TODO: fixnut
+        if (stock == null) {
+            return;
+        }
         holder.mTicker.setText(stock.stockName);
         holder.mCurrentPrice.setText(String.valueOf(stock.currentPrice));
         holder.mChange.setText(stock.getIncreaseDecreaseText());
@@ -100,8 +99,6 @@ public class StockAdapter extends RealmRecyclerViewAdapter<Stock, StockAdapter.V
      */
     class ViewHolder extends RecyclerView.ViewHolder {
 
-//        @BindView(R.id.avatar)
-//        ImageView mAvatar;
         @BindView(R.id.ticker)
         TextView mTicker;
         @BindView(R.id.current_price)
@@ -113,7 +110,7 @@ public class StockAdapter extends RealmRecyclerViewAdapter<Stock, StockAdapter.V
         @BindView(R.id.show_info)
         ImageView mInfo;
 
-        public ViewHolder(View itemView) {
+        private ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

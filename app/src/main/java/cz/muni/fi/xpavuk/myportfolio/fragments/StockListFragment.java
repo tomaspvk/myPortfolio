@@ -75,7 +75,6 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
         mAlphaVantageApi = new AlphaVantageApi();
         mRealm = Realm.getDefaultInstance();
         setHasOptionsMenu(true);
-        //setRetainInstance(true);
     }
 
     @Nullable
@@ -93,8 +92,10 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
 
         swipeRefreshLayout.setOnRefreshListener(this);
         mList.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
-        //Refreshing
-        swipeRefreshLayout.post(this::run); //Uncomment this
+        // Refresh if there are any stocks saved
+        if (!ownedStocks.isEmpty()) {
+            swipeRefreshLayout.post(this::run);
+        }
         return view;
     }
 
@@ -133,9 +134,8 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
         mRealm.close();
     }
 
-    private void addStockToList(@NonNull String ticker, FUNCTION function, String interval, int quantity, boolean isRefresh) {
+    private void addStockToList(@NonNull String ticker, FUNCTION function, String interval, double quantity, boolean isRefresh) {
         swipeRefreshLayout.setRefreshing(true);
-        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         Call<ApiStockResponse> stockCall;
         if (function == FUNCTION.DIGITAL_CURRENCY_DAILY) {
             stockCall = mAlphaVantageApi.getService()
@@ -190,7 +190,7 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
         if (resultCode == Activity.RESULT_OK) {
             Bundle extras = data.getExtras();
             String ticker = extras.getString("ticker");
-            int quantity = Integer.parseInt(extras.getString("quantity"));
+            double quantity = Double.parseDouble(extras.getString("quantity").replace(',', '.'));
             String type = extras.getString("type");
 
             addStockToList(ticker, Enum.valueOf(ApiEnum.FUNCTION.class, type), null, quantity, false);
@@ -236,7 +236,7 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
             RealmResults<Stock> result = realm.where(Stock.class).equalTo("stockName",stock.stockName).findAll();
             result.deleteAllFromRealm();
         });
-        onRefresh(); //handle like event maybe?
+        onRefresh();
         return true;
     }
 

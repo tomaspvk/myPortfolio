@@ -111,6 +111,6 @@ public class AddAssetDialogFragment extends DialogFragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState); // <-- must call this if you want to retain dialogFragment upon rotation
+        super.onSaveInstanceState(outState);
     }
 }

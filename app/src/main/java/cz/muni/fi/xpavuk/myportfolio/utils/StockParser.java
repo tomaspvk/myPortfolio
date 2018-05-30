@@ -26,10 +26,7 @@ public class StockParser {
 
         String lastRefreshedString = apiStockResponse.metaData._3LastRefreshed.split("\\s+")[0];
 
-        if (apiStockResponse.metaData._1Information.contains("Digital Currency"))
-             stock.isCrypto = true;
-        else
-            stock.isCrypto = false;
+        stock.isCrypto = apiStockResponse.metaData._1Information.contains("Digital Currency");
 
         stock.stockName = apiStockResponse.metaData._2Symbol.toUpperCase();
         stock.currentPrice = (double)Math.round(apiStockResponse.timeSeries.get(lastRefreshedString).close*100) / 100;
@@ -52,14 +49,6 @@ public class StockParser {
 
         return stock;
     }
-
-    /*private static double getChangeInPrice(String lastRefreshed, double currentPrice, ApiStockResponse apiStockResponse) {
-        Date todayDate = convertStringToDate(lastRefreshed);
-        todayDate.setTime(todayDate.getTime() - 2); // one day before
-        if (!apiStockResponse.timeSeries.containsKey(convertDateToString(todayDate)))
-            return 0d;
-        return currentPrice - apiStockResponse.timeSeries.get(convertDateToString(todayDate)).close;
-    }*/
 
     public static Date convertStringToDate(String dateString) {
         Date date = null;

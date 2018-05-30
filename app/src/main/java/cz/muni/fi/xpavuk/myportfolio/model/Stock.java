@@ -31,7 +31,7 @@ public class Stock extends RealmObject implements Serializable {
     public RealmList<HistoricalData> historicalData;
 
     public long timeStamp;
-    public int ownedQuantity;
+    public double ownedQuantity;
     public double totalSpentAmount;
 
     public String getIncreaseDecreaseText() {

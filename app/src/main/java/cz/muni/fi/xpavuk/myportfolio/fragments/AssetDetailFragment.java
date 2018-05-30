@@ -96,14 +96,6 @@ public class AssetDetailFragment extends Fragment {
         updatedAgoTextView.setText(currentStock.getupdatedAgoString(getContext()));
     }
 
-
-//    public void onBackPressed()
-//    {
-//        FragmentManager fm = getActivity().getSupportFragmentManager();
-//        fm.popBackStack();
-//    }
-
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
