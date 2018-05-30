@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import cz.muni.fi.xpavuk.myportfolio.activities.AssetInterface;
 import cz.muni.fi.xpavuk.myportfolio.adapter.StockAdapter;
 
@@ -61,6 +63,7 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
     @BindView(android.R.id.list)
     RecyclerView mList;
     @BindView(R.id.portfolio_value)
+    @Nullable
     TextView mPortfolioValue;
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -76,6 +79,12 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
         mRealm = Realm.getDefaultInstance();
         setHasOptionsMenu(true);
         //setRetainInstance(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mRealm = Realm.getDefaultInstance();
     }
 
     @Nullable
@@ -101,6 +110,9 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (mPortfolioValue == null){
+            mPortfolioValue = view.findViewById(R.id.portfolio_value);
+        }
         setPortfolioValue();
     }
 
