@@ -21,4 +21,10 @@
     <string name="ticker">Ticker</string>
     <string name="price">Price</string>
     <string name="quantity">Quantity</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="add_button">Add</string>
+    <string name="choice_selected">type</string>
+    <string name="stock">Stock</string>
+    <string name="crypto">Crypto</string>
+    <string name="select_asset">Select asset</string>
 </resources>

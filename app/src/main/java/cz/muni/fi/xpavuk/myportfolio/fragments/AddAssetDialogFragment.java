@@ -35,7 +35,6 @@ import static cz.muni.fi.xpavuk.myportfolio.api.ApiEnum.FUNCTION.TIME_SERIES_DAI
 
 public class AddAssetDialogFragment extends DialogFragment {
 
-    private final CharSequence[] choices = {" Stock "," Crypto "};
     private ApiEnum.FUNCTION selectedAssetType = TIME_SERIES_DAILY;
 
     @BindView(R.id.dialog_asset_name)
@@ -53,11 +52,6 @@ public class AddAssetDialogFragment extends DialogFragment {
     @BindView(R.id.dialog_asset_quantity_wrapper)
     TextInputLayout mAssetQuantity;
 
-
-    public static final String CHOICE_SELECTED = "type";
-    public static final String TICKER_SELECTED = "ticker";
-    public static final String QUANTITY_SELECTED = "quantity";
-
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -67,9 +61,9 @@ public class AddAssetDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         RadioButton rbStock = new RadioButton(getContext());
-        rbStock.setText(choices[0]);
+        rbStock.setText(getString(R.string.stock));
         RadioButton rbCrypto = new RadioButton(getContext());
-        rbCrypto.setText(choices[1]);
+        rbCrypto.setText(getString(R.string.crypto));
 
         mDialogRadioGroup.addView(rbStock);
         mDialogRadioGroup.addView(rbCrypto);
@@ -80,20 +74,20 @@ public class AddAssetDialogFragment extends DialogFragment {
             for (int x = 0; x < childCount; x++) {
                 RadioButton btn = (RadioButton) group.getChildAt(x);
                 if (btn.getId() == checkedId) {
-                    selectedAssetType = btn.getText().toString().equals(choices[0]) ? TIME_SERIES_DAILY : DIGITAL_CURRENCY_DAILY;
+                    selectedAssetType = btn.getText().toString().equals(getString(R.string.stock)) ? TIME_SERIES_DAILY : DIGITAL_CURRENCY_DAILY;
                 }
             }
         });
 
         builder.setView(dialogView);
-        builder.setPositiveButton("Add", (dialog, which) -> {
+        builder.setPositiveButton(getString(R.string.add_button), (dialog, which) -> {
             if (!TextUtils.isEmpty(mDialogAssetName.getText()) && !TextUtils.isEmpty(mDialogAssetQuantity.getText()))
             {
                 Intent intent = new Intent();
                 Bundle extras = new Bundle();
-                extras.putString(TICKER_SELECTED, mDialogAssetName.getText().toString());
-                extras.putString(QUANTITY_SELECTED, mDialogAssetQuantity.getText().toString());
-                extras.putString(CHOICE_SELECTED, selectedAssetType.toString());
+                extras.putString(getString(R.string.ticker), mDialogAssetName.getText().toString());
+                extras.putString(getString(R.string.quantity), mDialogAssetQuantity.getText().toString());
+                extras.putString(getString(R.string.choice_selected), selectedAssetType.toString());
                 intent.putExtras(extras);
                 getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
             } else
@@ -101,11 +95,11 @@ public class AddAssetDialogFragment extends DialogFragment {
                 getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, null);
             }
         });
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.setNegativeButton(getString(R.string.cancel_button), (dialog, which) -> dialog.cancel());
 
 
-        mAssetNameWrapper.setHint("Ticker");
-        mAssetQuantity.setHint("Quantity");
+        mAssetNameWrapper.setHint(getString(R.string.ticker));
+        mAssetQuantity.setHint(getString(R.string.quantity));
         return builder.create();
     }
 

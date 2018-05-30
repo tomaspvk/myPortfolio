@@ -18,4 +18,13 @@
     <string name="description">Informácie</string>
     <string name="portfolio_total">Hodnota portfólia</string>
     <string name="showing_stock_data_for">Zobrazenie trhovej ceny pre</string>
+    <string name="price">Cena</string>
+    <string name="ticker">Symbol</string>
+    <string name="quantity">Množstvo</string>
+    <string name="cancel_button">Zrušiť</string>
+    <string name="add_button">Pridať</string>
+    <string name="choice_selected">Typ</string>
+    <string name="stock">Akcia</string>
+    <string name="crypto">Krypto</string>
+    <string name="select_asset">Vybrať aktivum</string>
 </resources>
