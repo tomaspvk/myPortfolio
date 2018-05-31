@@ -131,8 +131,9 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
         double totalSpentRounded = (double)Math.round(totalSpent*100) / 100;
         double totalBalanceRounded = (double)Math.round(totalBalance*100) / 100;
         String value = "$" + String.valueOf(totalBalanceRounded) + " (" + totalSpentRounded + ")";
-
-        mPortfolioValue.setText(value);
+        if (mPortfolioValue != null) {
+            mPortfolioValue.setText(value);
+        }
     }
 
     @Override
@@ -180,7 +181,6 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
                 stock.ownedQuantity = quantity;
 
                 saveResult(Collections.singletonList(stock));
-                final Handler handler = new Handler();
                 onItemsLoadComplete();
             }
 
@@ -205,8 +205,14 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
             Bundle extras = data.getExtras();
             if (extras != null) {
                 String ticker = extras.getString("ticker");
-                double quantity = Double.parseDouble(extras.getString("quantity").replace(',', '.'));
+                String quantity_string = extras.getString("quantity");
                 String type = extras.getString("type");
+
+                if (ticker == null || quantity_string == null || type == null) {
+                    Toast.makeText(getContext(), getString(R.string.emptystock), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                double quantity = Double.parseDouble(quantity_string.replace(',', '.'));
 
                 addStockToList(ticker, Enum.valueOf(ApiEnum.FUNCTION.class, type), null, quantity, false);
             }
@@ -220,7 +226,11 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
     public void onRefresh()
     {
         RealmResults<Stock> ownedStocks = mRealm.where(Stock.class).and().equalTo("isValidStock", true).findAll();
-        for(Stock stock : ownedStocks)
+        if (ownedStocks.isEmpty()) {
+            setPortfolioValue();
+            swipeRefreshLayout.setRefreshing(false);
+        }
+        else for(Stock stock : ownedStocks)
         {
             if (stock.isCrypto)
                 addStockToList(stock.stockName, DIGITAL_CURRENCY_DAILY, null, stock.ownedQuantity, true);
@@ -252,6 +262,7 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
             result.deleteAllFromRealm();
         });
         onRefresh();
+
         return true;
     }
 

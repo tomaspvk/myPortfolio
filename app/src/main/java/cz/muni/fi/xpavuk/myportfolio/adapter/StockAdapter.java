@@ -67,12 +67,7 @@ public class StockAdapter extends RealmRecyclerViewAdapter<Stock, StockAdapter.V
         holder.mChange.setTextColor(changeColor);
         holder.mQuantity.setText(String.valueOf(stock.ownedQuantity));
 
-        holder.mInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fragmentJump(stock);
-            }
-        });
+        holder.mInfo.setOnClickListener(view -> fragmentJump(stock));
     }
 
     private void fragmentJump(Stock mStockSelected) {
