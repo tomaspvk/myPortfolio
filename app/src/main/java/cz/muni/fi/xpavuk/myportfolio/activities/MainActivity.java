@@ -4,23 +4,22 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import butterknife.BindView;
 import cz.muni.fi.xpavuk.myportfolio.R;
 import cz.muni.fi.xpavuk.myportfolio.fragments.StockListFragment;
-import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private Toolbar topToolbar;
-    private AssetInterface listener;
+    private AssetInterface listener;        // IMHO trosku overkill vytvaret interface s jedinou metodou pro fragment, jehoz jedinou funkci je pridat asset, staci vzit fragment a zavolat na nem metodu
+    // Nepouzivejte zkratky, nazev promenne by mel rikat, co promenna je neco dela,
+    // takze stockListFragment, stockFragment, listFragment, klidne i fragment, ale ne slf, uz jsem vam to rikal
     private StockListFragment slf;
     public void setListener(AssetInterface listener)
     {

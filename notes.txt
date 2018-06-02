@@ -1,0 +1,15 @@
+- Proc jsou oddelovace mezi jednotlivymi kartami na hlavni obrazovce, kdyz uz oddelujete pomoci karet?
+- Jak odstranim prvek listu? Sice jsem na to casem prisel, ale ja jsem poweruser znaly Android guidelines a zkratek, co Bezny Franta Uzivatel? Ten to nikdy nenajde.
+- Uvital bych potvrzovaci dialog pro odstraneni polozky
+- Uplne mi nesedi ApiStockResponse v package model, pokud se neuklada, ale urcite mi nesedi PortfolioApp v package activities
+- Snazili jste se me precurat setRetainInstance, ktere jsem vyslovne zakazal pouzivat jako reseni problemu s otacenim displeje, ale staci vypnout aplikaci a prijde crash:
+java.lang.NullPointerException: Attempt to invoke virtual method 'void android.support.v4.widget.SwipeRefreshLayout.setRefreshing(boolean)' on a null object reference
+        at cz.muni.fi.xpavuk.myportfolio.fragments.StockListFragment.onItemsLoadComplete(StockListFragment.java:241)
+        at cz.muni.fi.xpavuk.myportfolio.fragments.StockListFragment.access$200(StockListFragment.java:48)
+        at cz.muni.fi.xpavuk.myportfolio.fragments.StockListFragment$1.onResponse(StockListFragment.java:179)
+- Crash, co jsem vam uz poslal na Slacku:
+java.lang.NullPointerException: Attempt to read from field 'java.lang.String cz.muni.fi.xpavuk.myportfolio.model.MetaData._3LastRefreshed' on a null object reference
+        at cz.muni.fi.xpavuk.myportfolio.utils.StockParser.getStockFromStockApiResponse(StockParser.java:27)
+        at cz.muni.fi.xpavuk.myportfolio.fragments.StockListFragment$1.onResponse(StockListFragment.java:171)
+- +1 za pouziti SimpleDateFormat na formatovani data, ale krici tam na vas Lint warning, ktery byste meli resit (StockParser.java)
+
