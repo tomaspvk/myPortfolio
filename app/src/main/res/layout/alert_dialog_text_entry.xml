@@ -50,6 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!-- Proc fontFamily? Je duvod mit v jedinem EditTextu jiny font nez v cele appce? -->
         <EditText
             android:id="@+id/dialog_asset_quantity"
             android:inputType="numberDecimal"

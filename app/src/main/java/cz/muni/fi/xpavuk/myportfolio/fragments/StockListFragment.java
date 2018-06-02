@@ -1,14 +1,11 @@
 package cz.muni.fi.xpavuk.myportfolio.fragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,11 +15,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
-import cz.muni.fi.xpavuk.myportfolio.activities.AssetInterface;
-import cz.muni.fi.xpavuk.myportfolio.adapter.StockAdapter;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -30,13 +22,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cz.muni.fi.xpavuk.myportfolio.R;
+import cz.muni.fi.xpavuk.myportfolio.activities.AssetInterface;
+import cz.muni.fi.xpavuk.myportfolio.adapter.StockAdapter;
 import cz.muni.fi.xpavuk.myportfolio.api.AlphaVantageApi;
 import cz.muni.fi.xpavuk.myportfolio.api.ApiEnum;
 import cz.muni.fi.xpavuk.myportfolio.model.ApiStockResponse;
 import cz.muni.fi.xpavuk.myportfolio.model.Stock;
 import cz.muni.fi.xpavuk.myportfolio.utils.SimpleDividerItemDecoration;
 import io.realm.Realm;
-
 import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -79,7 +72,7 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
         mAlphaVantageApi = new AlphaVantageApi();
         mRealm = Realm.getDefaultInstance();
         setHasOptionsMenu(true);
-        setRetainInstance(true);
+        setRetainInstance(true);        // Proc je tohle retainInstance, kdyz jsem vam na cviku rikal, at to v projektu nepouzivate pro Fragmenty, ktere zobrazuji nejake UI? Takhle se otaceni displeje neresi.
 
     }
 
@@ -163,6 +156,8 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
             @Override
             public void onResponse(@NonNull Call<ApiStockResponse> call, @NonNull Response<ApiStockResponse> response) {
                 if (response.body() == null || response.body().errorMessage != null) {
+                    // Jak mate osetrene, kdyz swipeRefreshLayout bude null? Mate nastaveny timeout na 30s, takze kdyz na pomalem pripojeni dostanu
+                    // odpoved pozde, Fragment uz muze byt mrtvy a tady bude NPE
                     swipeRefreshLayout.setRefreshing(false);
                     Toast.makeText(getContext(), getString(R.string.invalidstock), Toast.LENGTH_SHORT).show();
                     return;
@@ -192,6 +187,8 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
         });
     }
 
+    // Jaka action? Tenhle Fragment nema pojmenovani, ze ktereho by bylo jasne, ze dela jedinou akci, takze
+    // podle nazvu metody nevim, co za akci by to mohlo byt. U private metod bych to tolik neresil, ale tahle je public
     public void action() {
         AddAssetDialogFragment addAssetDialog = new AddAssetDialogFragment();
         addAssetDialog.setTargetFragment(this, 0);
