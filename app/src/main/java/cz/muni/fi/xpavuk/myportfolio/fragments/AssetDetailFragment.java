@@ -217,35 +217,23 @@ public class AssetDetailFragment extends Fragment {
     }
 
     @OnClick(R.id.delete_asset_from_details)
-    void deleteStock(View view) {
+    void deleteStock() {
         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-        alertDialog.setTitle("Alert");
-        alertDialog.setMessage("Alert message to be shown");
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NOK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent();
-                        Bundle extras = new Bundle();
-                        extras.putSerializable("stock", currentStock);
-                        intent.putExtras(extras);
-                        getFragmentManager().popBackStack();
-                        getTargetFragment().onActivityResult(getTargetRequestCode(), 2, intent);
-                        //dialog.dismiss();
-                    }
+        alertDialog.setTitle(getString(R.string.delete));
+        alertDialog.setMessage(getString(R.string.delete_dialog_message));
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.cancel_button),
+                (dialog, which) -> dialog.dismiss());
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.delete),
+                (dialog, which) -> {
+                    Intent intent = new Intent();
+                    Bundle extras = new Bundle();
+                    extras.putSerializable("stock", currentStock);
+                    intent.putExtras(extras);
+                    dialog.dismiss();
+                    getFragmentManager().popBackStack();
+                    getFragmentManager().findFragmentByTag(StockListFragment.TAG).onActivityResult(getTargetRequestCode(), 2, intent);
                 });
 
         alertDialog.show();
-//        Intent intent = new Intent();
-//        Bundle extras = new Bundle();
-//        extras.putSerializable("stock", currentStock);
-//        intent.putExtras(extras);
-//        getTargetFragment().onActivityResult(getTargetRequestCode(), 2, intent);
-        //getFragmentManager().popBackStack();
     }
 }

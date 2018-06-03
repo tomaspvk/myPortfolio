@@ -20,7 +20,7 @@
     <string name="showing_stock_data_for">Zobrazenie ceny pre</string>
     <string name="price">Cena</string>
     <string name="ticker">Symbol</string>
-    <string name="quantity">Množstvo</string>
+    <string name="quantity">Pozícia</string>
     <string name="cancel_button">Zrušiť</string>
     <string name="add_button">Pridať</string>
     <string name="choice_selected">Typ</string>
@@ -29,4 +29,6 @@
     <string name="select_asset">Vybrať aktivum</string>
     <string name="invalidstock">Vyskytla sa chyba. Prosím skontrolujte, či je zadaný symbol validný alebo skúste neskôr.</string>
     <string name="emptystock">Zadaný symbol a množstvo nesmú byť prázdne.</string>
+    <string name="delete">Zmazať</string>
+    <string name="delete_dialog_message">Naozaj chcete vymazať toto aktívum?</string>
 </resources>

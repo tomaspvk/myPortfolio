@@ -19,4 +19,7 @@ public class ApiStockResponse {
     @SerializedName("Error Message")
     public String errorMessage;
 
+    @SerializedName("Information")
+    public String information;
+
 }

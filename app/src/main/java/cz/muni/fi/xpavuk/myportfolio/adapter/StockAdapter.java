@@ -67,22 +67,8 @@ public class StockAdapter extends RealmRecyclerViewAdapter<Stock, StockAdapter.V
         int changeColor = stock.changeInPrice > 0 ? Color.parseColor("#ff99cc00") : Color.parseColor("#ffff4444");
         holder.mChange.setTextColor(changeColor);
         holder.mQuantity.setText(String.valueOf(stock.ownedQuantity));
-
-        //holder.mInfo.setOnClickListener(view -> fragmentJump(stock));
-    }
-
-//    @OnClick
-//    public void onClick(View view) {
-//        Stock s = getItem(getAdapterPosition());
-//        fragmentJump(stock);
-//    }
-
-    private void fragmentJump(Stock mStockSelected) {
-        Fragment detailFragment = new AssetDetailFragment();
-        Bundle mBundle = new Bundle();
-        mBundle.putSerializable("selected_key", mStockSelected);
-        detailFragment.setArguments(mBundle);
-        switchContent(fragment.getId(), detailFragment);
+        double holdings_value = (double)Math.round(stock.currentPrice * stock.ownedQuantity * 100) / 100;
+        holder.mHoldingsValue.setText(String.valueOf(holdings_value));
     }
 
     private void switchContent(int id, Fragment fragment) {
@@ -109,8 +95,8 @@ public class StockAdapter extends RealmRecyclerViewAdapter<Stock, StockAdapter.V
         TextView mChange;
         @BindView(R.id.quantity)
         TextView mQuantity;
-        @BindView(R.id.show_info)
-        ImageView mInfo;
+        @BindView(R.id.holdings_value)
+        TextView mHoldingsValue;
 
         private ViewHolder(View itemView) {
             super(itemView);
@@ -135,7 +121,7 @@ public class StockAdapter extends RealmRecyclerViewAdapter<Stock, StockAdapter.V
         }
 
         @OnClick
-        void onClick(View view) {
+        void onClick() {
             Stock s = getItem(getAdapterPosition());
             fragmentJump(s);
         }

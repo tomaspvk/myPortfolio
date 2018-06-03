@@ -3,6 +3,7 @@ package cz.muni.fi.xpavuk.myportfolio.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
@@ -54,7 +55,7 @@ import static cz.muni.fi.xpavuk.myportfolio.utils.StockParser.getStockFromStockA
 
 public class StockListFragment extends Fragment implements AssetInterface, SwipeRefreshLayout.OnRefreshListener{
 
-    private static final String TAG = StockListFragment.class.getSimpleName();
+    public static final String TAG = StockListFragment.class.getSimpleName();
 
     private AlphaVantageApi mAlphaVantageApi;
     private StockAdapter mAdapter;
@@ -68,6 +69,8 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
     TextView mPortfolioValue;
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.portfolio_change)
+    TextView mPortfolioChange;
 
     public static StockListFragment newInstance() {
         return new StockListFragment();
@@ -129,9 +132,23 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
         }
         double totalSpentRounded = (double)Math.round(totalSpent*100) / 100;
         double totalBalanceRounded = (double)Math.round(totalBalance*100) / 100;
-        String value = "$" + String.valueOf(totalBalanceRounded) + " (" + totalSpentRounded + ")";
+        String value = "$" + String.valueOf(totalBalanceRounded);
         if (mPortfolioValue != null) {
             mPortfolioValue.setText(value);
+        }
+        double change = totalBalanceRounded - totalSpentRounded;
+        String changeText;
+        int changeColor;
+        if (change < 0) {
+            changeText = "+$" + change;
+            changeColor = Color.parseColor("#ffff4444");
+        } else {
+            changeText = "+$" + change;
+            changeColor = Color.parseColor("#ff99cc00");
+        }
+        if (mPortfolioChange != null) {
+            mPortfolioChange.setText(changeText);
+            mPortfolioChange.setTextColor(changeColor);
         }
     }
 
@@ -148,6 +165,7 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
     }
 
     private void addStockToList(@NonNull String ticker, FUNCTION function, String interval, double quantity, boolean isRefresh) {
+        swipeRefreshLayout.setRefreshing(true);
         Call<ApiStockResponse> stockCall;
         if (function == FUNCTION.DIGITAL_CURRENCY_DAILY) {
             stockCall = mAlphaVantageApi.getService()
@@ -180,6 +198,9 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
 
                 saveResult(Collections.singletonList(stock));
                 onItemsLoadComplete();
+                if (swipeRefreshLayout != null) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
 
             @Override
@@ -268,14 +289,12 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
         }
     }
 
-    public boolean delete(final Stock stock){
+    public void delete(final Stock stock){
         mRealm.executeTransaction(realm -> {
             RealmResults<Stock> result = realm.where(Stock.class).equalTo("stockName",stock.stockName).findAll();
             result.deleteAllFromRealm();
         });
-        onRefresh();
-
-        return true;
+        setPortfolioValue();
     }
 
     private void run() {

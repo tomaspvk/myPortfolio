@@ -18,7 +18,7 @@ public class StockParser {
 
     public static Stock getStockFromStockApiResponse(ApiStockResponse apiStockResponse) {
         Stock stock = new Stock();
-        if (apiStockResponse.errorMessage != null) {
+        if (apiStockResponse.errorMessage != null || apiStockResponse.information != null) {
             stock.isValidStock = false;
             return stock;
         }
