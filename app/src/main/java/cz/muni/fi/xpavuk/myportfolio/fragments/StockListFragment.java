@@ -3,8 +3,6 @@ package cz.muni.fi.xpavuk.myportfolio.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,9 +25,8 @@ import butterknife.Unbinder;
 import cz.muni.fi.xpavuk.myportfolio.R;
 import cz.muni.fi.xpavuk.myportfolio.api.AlphaVantageApi;
 import cz.muni.fi.xpavuk.myportfolio.api.ApiEnum;
-import cz.muni.fi.xpavuk.myportfolio.model.ApiStockResponse;
+import cz.muni.fi.xpavuk.myportfolio.api.ApiStockResponse;
 import cz.muni.fi.xpavuk.myportfolio.model.Stock;
-import cz.muni.fi.xpavuk.myportfolio.utils.SimpleDividerItemDecoration;
 import io.realm.Realm;
 
 import io.realm.RealmResults;
@@ -77,8 +74,6 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
         mAlphaVantageApi = new AlphaVantageApi();
         mRealm = Realm.getDefaultInstance();
         setHasOptionsMenu(true);
-        setRetainInstance(true);
-
     }
 
     @Override
@@ -291,11 +286,13 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
     }
 
     public void delete(final Stock stock){
-        mRealm.executeTransaction(realm -> {
-            RealmResults<Stock> result = realm.where(Stock.class).equalTo("stockName", stock.stockName).findAll();
-            result.deleteAllFromRealm();
-        });
-        setPortfolioValue();
+        if (stock != null && mRealm != null) {
+            mRealm.executeTransaction(realm -> {
+                RealmResults<Stock> result = realm.where(Stock.class).equalTo("stockName", stock.stockName).findAll();
+                result.deleteAllFromRealm();
+            });
+            setPortfolioValue();
+        }
     }
 
     /**

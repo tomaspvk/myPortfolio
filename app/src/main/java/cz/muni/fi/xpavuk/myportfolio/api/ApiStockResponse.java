@@ -1,4 +1,4 @@
-package cz.muni.fi.xpavuk.myportfolio.model;
+package cz.muni.fi.xpavuk.myportfolio.api;
 
 /**
  * author: Tomas Pavuk
@@ -7,6 +7,9 @@ package cz.muni.fi.xpavuk.myportfolio.model;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.HashMap;
+
+import cz.muni.fi.xpavuk.myportfolio.model.MetaData;
+import cz.muni.fi.xpavuk.myportfolio.model.StockData;
 
 public class ApiStockResponse {
 

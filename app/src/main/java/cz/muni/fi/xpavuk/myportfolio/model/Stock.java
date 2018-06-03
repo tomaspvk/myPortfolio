@@ -6,6 +6,8 @@ package cz.muni.fi.xpavuk.myportfolio.model;
  */
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.io.Serializable;
 import cz.muni.fi.xpavuk.myportfolio.R;
@@ -13,7 +15,7 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class Stock extends RealmObject implements Serializable {
+public class Stock extends RealmObject implements Serializable, Parcelable {
 
     @PrimaryKey
     public String stockName;
@@ -52,5 +54,15 @@ public class Stock extends RealmObject implements Serializable {
             else
                 return context.getString(R.string.updated_minutes_ago, secDiff / 60);
         }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
     }
 }

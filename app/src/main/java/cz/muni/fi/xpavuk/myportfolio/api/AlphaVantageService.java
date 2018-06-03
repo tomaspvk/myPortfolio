@@ -1,6 +1,5 @@
 package cz.muni.fi.xpavuk.myportfolio.api;
 
-import cz.muni.fi.xpavuk.myportfolio.model.ApiStockResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;

@@ -1,7 +1,5 @@
 package cz.muni.fi.xpavuk.myportfolio.fragments;
 
-import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -13,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +23,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cz.muni.fi.xpavuk.myportfolio.R;
-import cz.muni.fi.xpavuk.myportfolio.activities.MainActivity;
 import cz.muni.fi.xpavuk.myportfolio.databinding.FragmentAssetDetailBinding;
 
 import cz.muni.fi.xpavuk.myportfolio.model.HistoricalData;
@@ -42,10 +38,8 @@ import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IFillFormatter;
-import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -62,7 +56,6 @@ public class AssetDetailFragment extends Fragment {
         return new AssetDetailFragment();
     }
 
-    private Realm mRealm;
     private Unbinder mUnbinder;
 
     Stock currentStock;
@@ -84,9 +77,7 @@ public class AssetDetailFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mRealm = Realm.getDefaultInstance();
         setHasOptionsMenu(true);
-        setRetainInstance(true);
     }
 
     @Nullable
@@ -125,7 +116,7 @@ public class AssetDetailFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mRealm.close();
+//        mRealm.close();
     }
 
     @Override

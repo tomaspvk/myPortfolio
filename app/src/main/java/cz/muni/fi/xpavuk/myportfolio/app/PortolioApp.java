@@ -1,4 +1,4 @@
-package cz.muni.fi.xpavuk.myportfolio.activities;
+package cz.muni.fi.xpavuk.myportfolio.app;
 
 import android.app.Application;
 

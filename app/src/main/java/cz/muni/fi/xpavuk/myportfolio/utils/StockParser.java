@@ -6,7 +6,7 @@ import java.util.Date;
 
 import cz.muni.fi.xpavuk.myportfolio.model.HistoricalData;
 import cz.muni.fi.xpavuk.myportfolio.model.Stock;
-import cz.muni.fi.xpavuk.myportfolio.model.ApiStockResponse;
+import cz.muni.fi.xpavuk.myportfolio.api.ApiStockResponse;
 import io.realm.RealmList;
 
 /**
