@@ -310,6 +310,7 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
             Stock stockCopyFromRealm = realm.copyFromRealm(stockFromRealm);
             //increase quantity of stock in my portfolio by quantity of stock to be added
             stockToAdd.ownedQuantity += stockCopyFromRealm.ownedQuantity;
+            stockToAdd.totalSpentAmount += stockCopyFromRealm.currentPrice;
         }
     }
 
