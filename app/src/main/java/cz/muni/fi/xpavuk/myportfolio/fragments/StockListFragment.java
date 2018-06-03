@@ -139,7 +139,7 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
         String changeText;
         int changeColor;
         if (change < 0) {
-            changeText = "+$" + change;
+            changeText = "-$" + (change*(-1));
             changeColor = Color.parseColor("#ffff4444");
         } else {
             changeText = "+$" + change;
@@ -309,10 +309,9 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
                 .contains("stockName", stockToAdd.stockName)
                 .findFirst();
         if (stockFromRealm != null) {
-            Stock stockCopyFromRealm = realm.copyFromRealm(stockFromRealm);
             //increase quantity of stock in my portfolio by quantity of stock to be added
-            stockToAdd.ownedQuantity += stockCopyFromRealm.ownedQuantity;
-            stockToAdd.totalSpentAmount += stockCopyFromRealm.currentPrice;
+            stockToAdd.ownedQuantity += stockFromRealm.ownedQuantity;
+            stockToAdd.totalSpentAmount += stockFromRealm.totalSpentAmount;
         }
     }
 
