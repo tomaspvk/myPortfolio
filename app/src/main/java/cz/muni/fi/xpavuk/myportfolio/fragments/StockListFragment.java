@@ -135,7 +135,7 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
         if (mPortfolioValue != null) {
             mPortfolioValue.setText(value);
         }
-        double change = totalBalanceRounded - totalSpentRounded;
+        double change = (double)Math.round((totalBalanceRounded - totalSpentRounded)*100) / 100;
         String changeText;
         int changeColor;
         if (change < 0) {
@@ -195,7 +195,7 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
                 stock.isCrypto = function == FUNCTION.DIGITAL_CURRENCY_DAILY;
                 stock.ownedQuantity = quantity;
 
-                saveOrUpdateResult(stock);
+                saveOrUpdateResult(stock, isRefresh);
                 onItemsLoadComplete();
                 if (swipeRefreshLayout != null) {
                     swipeRefreshLayout.setRefreshing(false);
@@ -275,11 +275,13 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
         setPortfolioValue();
     }
 
-    private void saveOrUpdateResult(final Stock stockToAdd) {
+    private void saveOrUpdateResult(final Stock stockToAdd, boolean isRefresh) {
         Realm realm = null;
         try {
             realm = Realm.getDefaultInstance();
-            updateStock(realm, stockToAdd);
+            if (!isRefresh) {
+                updateStock(realm, stockToAdd);
+            }
             realm.executeTransaction(realm1 -> realm1.insertOrUpdate(stockToAdd));
         } finally {
             if (realm != null) {
