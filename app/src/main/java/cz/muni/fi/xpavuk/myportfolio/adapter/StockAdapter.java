@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.OnLongClick;
 import cz.muni.fi.xpavuk.myportfolio.R;
 import cz.muni.fi.xpavuk.myportfolio.activities.MainActivity;
@@ -67,8 +68,14 @@ public class StockAdapter extends RealmRecyclerViewAdapter<Stock, StockAdapter.V
         holder.mChange.setTextColor(changeColor);
         holder.mQuantity.setText(String.valueOf(stock.ownedQuantity));
 
-        holder.mInfo.setOnClickListener(view -> fragmentJump(stock));
+        //holder.mInfo.setOnClickListener(view -> fragmentJump(stock));
     }
+
+//    @OnClick
+//    public void onClick(View view) {
+//        Stock s = getItem(getAdapterPosition());
+//        fragmentJump(stock);
+//    }
 
     private void fragmentJump(Stock mStockSelected) {
         Fragment detailFragment = new AssetDetailFragment();
@@ -125,6 +132,20 @@ public class StockAdapter extends RealmRecyclerViewAdapter<Stock, StockAdapter.V
             });
             popup.show();
             return true;
+        }
+
+        @OnClick
+        void onClick(View view) {
+            Stock s = getItem(getAdapterPosition());
+            fragmentJump(s);
+        }
+
+        private void fragmentJump(Stock mStockSelected) {
+            Fragment detailFragment = new AssetDetailFragment();
+            Bundle mBundle = new Bundle();
+            mBundle.putSerializable("selected_key", mStockSelected);
+            detailFragment.setArguments(mBundle);
+            switchContent(fragment.getId(), detailFragment);
         }
     }
 }

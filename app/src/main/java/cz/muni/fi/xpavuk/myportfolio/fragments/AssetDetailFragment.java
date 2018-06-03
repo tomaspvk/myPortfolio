@@ -1,22 +1,32 @@
 package cz.muni.fi.xpavuk.myportfolio.fragments;
 
+import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import cz.muni.fi.xpavuk.myportfolio.R;
+import cz.muni.fi.xpavuk.myportfolio.activities.MainActivity;
 import cz.muni.fi.xpavuk.myportfolio.databinding.FragmentAssetDetailBinding;
 
 import cz.muni.fi.xpavuk.myportfolio.model.HistoricalData;
@@ -68,6 +78,9 @@ public class AssetDetailFragment extends Fragment {
     @BindView(R.id.textview_closed)
     TextView updatedAgoTextView;
 
+    @BindView(R.id.delete_asset_from_details)
+    Button deleteButton;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +96,12 @@ public class AssetDetailFragment extends Fragment {
         assetDetailBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_asset_detail, container, false);
         mUnbinder = ButterKnife.bind(this, assetDetailBinding.getRoot());
+
+        Drawable buttonBackground = deleteButton.getBackground();
+        if(buttonBackground != null) {
+            buttonBackground.setColorFilter(0xFFFFBB33, PorterDuff.Mode.MULTIPLY);
+            deleteButton.setBackground(buttonBackground);
+        }
 
         return assetDetailBinding.getRoot();
     }
@@ -189,14 +208,44 @@ public class AssetDetailFragment extends Fragment {
         lineDataSet.setFillColor(ContextCompat.getColor(getContext(), R.color.holo_orange_dark));
     }
 
-    private HashMap<String, Double> parseHistoricalDataToHashMap(RealmList<HistoricalData> historicalData)
-    {
+    private HashMap<String, Double> parseHistoricalDataToHashMap(RealmList<HistoricalData> historicalData) {
         HashMap<String, Double> dataMap = new HashMap<>();
-        for (HistoricalData data : historicalData)
-        {
+        for (HistoricalData data : historicalData) {
             dataMap.put(data.key, data.value);
         }
         return dataMap;
     }
 
+    @OnClick(R.id.delete_asset_from_details)
+    void deleteStock(View view) {
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setTitle("Alert");
+        alertDialog.setMessage("Alert message to be shown");
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NOK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent();
+                        Bundle extras = new Bundle();
+                        extras.putSerializable("stock", currentStock);
+                        intent.putExtras(extras);
+                        getFragmentManager().popBackStack();
+                        getTargetFragment().onActivityResult(getTargetRequestCode(), 2, intent);
+                        //dialog.dismiss();
+                    }
+                });
+
+        alertDialog.show();
+//        Intent intent = new Intent();
+//        Bundle extras = new Bundle();
+//        extras.putSerializable("stock", currentStock);
+//        intent.putExtras(extras);
+//        getTargetFragment().onActivityResult(getTargetRequestCode(), 2, intent);
+        //getFragmentManager().popBackStack();
+    }
 }

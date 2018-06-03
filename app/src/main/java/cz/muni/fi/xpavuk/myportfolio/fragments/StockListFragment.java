@@ -103,7 +103,6 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
         mList.setHasFixedSize(true);
 
         swipeRefreshLayout.setOnRefreshListener(this);
-        mList.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
         // Refresh if there are any stocks saved
         if (!ownedStocks.isEmpty()) {
             swipeRefreshLayout.post(this::run);
@@ -149,7 +148,6 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
     }
 
     private void addStockToList(@NonNull String ticker, FUNCTION function, String interval, double quantity, boolean isRefresh) {
-        swipeRefreshLayout.setRefreshing(true);
         Call<ApiStockResponse> stockCall;
         if (function == FUNCTION.DIGITAL_CURRENCY_DAILY) {
             stockCall = mAlphaVantageApi.getService()
@@ -216,8 +214,13 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
 
                 addStockToList(ticker, Enum.valueOf(ApiEnum.FUNCTION.class, type), null, quantity, false);
             }
-        } else if (resultCode == Activity.RESULT_CANCELED)
-        {
+        } else if (resultCode == 2) {
+            Bundle extras = data.getExtras();
+            if (extras != null) {
+                Stock stockToDelete = (Stock)extras.getSerializable("stock");
+                delete(stockToDelete);
+            }
+        } else if (resultCode == Activity.RESULT_CANCELED) {
             Toast.makeText(getContext(), getString(R.string.emptystock), Toast.LENGTH_SHORT).show();
         }
     }
@@ -228,7 +231,6 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
         RealmResults<Stock> ownedStocks = mRealm.where(Stock.class).and().equalTo("isValidStock", true).findAll();
         if (ownedStocks.isEmpty()) {
             setPortfolioValue();
-            swipeRefreshLayout.setRefreshing(false);
         }
         else for(Stock stock : ownedStocks)
         {
@@ -237,11 +239,21 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
             else
                 addStockToList(stock.stockName, TIME_SERIES_DAILY, null, stock.ownedQuantity, true);
         }
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (swipeRefreshLayout!=null) {
+            swipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.destroyDrawingCache();
+            swipeRefreshLayout.clearAnimation();
+        }
     }
 
     private void onItemsLoadComplete(){
         setPortfolioValue();
-        swipeRefreshLayout.setRefreshing(false);
     }
 
     private void saveResult(final List<Stock> stocks) {
