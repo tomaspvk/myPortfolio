@@ -4,16 +4,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import butterknife.BindView;
 import cz.muni.fi.xpavuk.myportfolio.R;
 import cz.muni.fi.xpavuk.myportfolio.fragments.StockListFragment;
-import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Toolbar topToolbar;
     private AssetInterface listener;
-    private StockListFragment slf;
+    private StockListFragment stockListFragment;
     public void setListener(AssetInterface listener)
     {
         this.listener = listener ;
@@ -38,16 +35,16 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {       // Important, otherwise there'd be a new Fragment created with every orientation change
             FragmentManager fragmentManager = getSupportFragmentManager();
             if (fragmentManager != null) {
-                slf = StockListFragment.newInstance();
+                stockListFragment = StockListFragment.newInstance();
                 fragmentManager.beginTransaction()
                         .replace(android.R.id.content,
-                                slf,
+                                stockListFragment,
                                 StockListFragment.class.getSimpleName())
                         .commit();
             }
         } else
-            slf = (StockListFragment) getSupportFragmentManager().findFragmentByTag(StockListFragment.class.getSimpleName());
-        setListener(slf);
+            stockListFragment = (StockListFragment) getSupportFragmentManager().findFragmentByTag(StockListFragment.class.getSimpleName());
+        setListener(stockListFragment);
     }
 
     private void setupToolbar(){

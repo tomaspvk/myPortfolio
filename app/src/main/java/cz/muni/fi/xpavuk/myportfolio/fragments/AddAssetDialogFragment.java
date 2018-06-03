@@ -81,8 +81,7 @@ public class AddAssetDialogFragment extends DialogFragment {
 
         builder.setView(dialogView);
         builder.setPositiveButton(getString(R.string.add_button), (dialog, which) -> {
-            if (!TextUtils.isEmpty(mDialogAssetName.getText()) && !TextUtils.isEmpty(mDialogAssetQuantity.getText()))
-            {
+            if (!TextUtils.isEmpty(mDialogAssetName.getText()) && !TextUtils.isEmpty(mDialogAssetQuantity.getText())) {
                 Intent intent = new Intent();
                 Bundle extras = new Bundle();
                 extras.putString("ticker", mDialogAssetName.getText().toString());
@@ -90,8 +89,7 @@ public class AddAssetDialogFragment extends DialogFragment {
                 extras.putString("type", selectedAssetType.toString());
                 intent.putExtras(extras);
                 getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
-            } else
-            {
+            } else {
                 getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, null);
             }
         });
