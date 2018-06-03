@@ -1,7 +1,6 @@
 package cz.muni.fi.xpavuk.myportfolio.fragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
@@ -19,13 +18,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import cz.muni.fi.xpavuk.myportfolio.activities.AssetInterface;
 import cz.muni.fi.xpavuk.myportfolio.adapter.StockAdapter;
-
-import java.util.Collections;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,6 +33,7 @@ import cz.muni.fi.xpavuk.myportfolio.utils.SimpleDividerItemDecoration;
 import io.realm.Realm;
 
 import io.realm.RealmResults;
+import io.realm.Sort;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -53,7 +48,7 @@ import static cz.muni.fi.xpavuk.myportfolio.utils.StockParser.getStockFromStockA
  * date: 30.4.2018
  */
 
-public class StockListFragment extends Fragment implements AssetInterface, SwipeRefreshLayout.OnRefreshListener{
+public class StockListFragment extends Fragment implements AssetInterface, SwipeRefreshLayout.OnRefreshListener {
 
     public static final String TAG = StockListFragment.class.getSimpleName();
 
@@ -99,7 +94,11 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
         View view = inflater.inflate(R.layout.fragment_list, container, false);
         mUnbinder = ButterKnife.bind(this, view);
 
-        RealmResults<Stock> ownedStocks = mRealm.where(Stock.class).and().equalTo("isValidStock", true).findAll();
+        RealmResults<Stock> ownedStocks = mRealm
+                .where(Stock.class)
+                .and().equalTo("isValidStock", true)
+                .findAll()
+                .sort("ownedQuantity", Sort.DESCENDING);
         mAdapter = new StockAdapter(getContext(), ownedStocks, StockListFragment.this);
         mList.setAdapter(mAdapter);
         mList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -120,19 +119,19 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
     }
 
 
-    private void setPortfolioValue()
-    {
+    private void setPortfolioValue() {
         RealmResults<Stock> ownedStocks = mRealm.where(Stock.class).and().equalTo("isValidStock", true).findAll();
         double totalBalance = 0;
         double totalSpent = 0;
-        for(Stock stock : ownedStocks)
-        {
+        for (Stock stock : ownedStocks) {
             totalSpent += stock.totalSpentAmount;
             totalBalance += stock.currentPrice * stock.ownedQuantity;
         }
+
         double totalSpentRounded = (double)Math.round(totalSpent*100) / 100;
         double totalBalanceRounded = (double)Math.round(totalBalance*100) / 100;
         String value = "$" + String.valueOf(totalBalanceRounded);
+      
         if (mPortfolioValue != null) {
             mPortfolioValue.setText(value);
         }
@@ -186,7 +185,7 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
 
                 Stock stock = getStockFromStockApiResponse(response.body());
                 if (!isRefresh) {
-                    stock.totalSpentAmount = (double)Math.round(stock.currentPrice * quantity *100)/100;
+                    stock.totalSpentAmount = (double) Math.round(stock.currentPrice * quantity * 100) / 100;
                 } else {
                     Stock savedField = mRealm.where(Stock.class).and().equalTo("stockName", stock.stockName).findFirst();
                     if (savedField != null) {
@@ -196,7 +195,7 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
                 stock.isCrypto = function == FUNCTION.DIGITAL_CURRENCY_DAILY;
                 stock.ownedQuantity = quantity;
 
-                saveResult(Collections.singletonList(stock));
+                saveOrUpdateResult(stock);
                 onItemsLoadComplete();
                 if (swipeRefreshLayout != null) {
                     swipeRefreshLayout.setRefreshing(false);
@@ -247,8 +246,7 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
     }
 
     @Override
-    public void onRefresh()
-    {
+    public void onRefresh() {
         RealmResults<Stock> ownedStocks = mRealm.where(Stock.class).and().equalTo("isValidStock", true).findAll();
         if (ownedStocks.isEmpty()) {
             setPortfolioValue();
@@ -273,17 +271,18 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
         }
     }
 
-    private void onItemsLoadComplete(){
+    private void onItemsLoadComplete() {
         setPortfolioValue();
     }
 
-    private void saveResult(final List<Stock> stocks) {
+    private void saveOrUpdateResult(final Stock stockToAdd) {
         Realm realm = null;
         try {
             realm = Realm.getDefaultInstance();
-            realm.executeTransaction(realm1 -> realm1.insertOrUpdate(stocks));
+            updateStock(realm, stockToAdd);
+            realm.executeTransaction(realm1 -> realm1.insertOrUpdate(stockToAdd));
         } finally {
-            if(realm != null) {
+            if (realm != null) {
                 realm.close();
             }
         }
@@ -291,10 +290,27 @@ public class StockListFragment extends Fragment implements AssetInterface, Swipe
 
     public void delete(final Stock stock){
         mRealm.executeTransaction(realm -> {
-            RealmResults<Stock> result = realm.where(Stock.class).equalTo("stockName",stock.stockName).findAll();
+            RealmResults<Stock> result = realm.where(Stock.class).equalTo("stockName", stock.stockName).findAll();
             result.deleteAllFromRealm();
         });
         setPortfolioValue();
+    }
+
+    /**
+     * Found whether stock to be added is already in my portfolio. If such stock is found increase quantity
+     * @param realm
+     * @param stockToAdd - stock to be added
+     */
+    private void updateStock(Realm realm, Stock stockToAdd) {
+        Stock stockFromRealm = realm
+                .where(Stock.class)
+                .contains("stockName", stockToAdd.stockName)
+                .findFirst();
+        if (stockFromRealm != null) {
+            Stock stockCopyFromRealm = realm.copyFromRealm(stockFromRealm);
+            //increase quantity of stock in my portfolio by quantity of stock to be added
+            stockToAdd.ownedQuantity += stockCopyFromRealm.ownedQuantity;
+        }
     }
 
     private void run() {
