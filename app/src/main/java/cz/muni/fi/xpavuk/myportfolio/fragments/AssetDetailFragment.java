@@ -116,7 +116,6 @@ public class AssetDetailFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        mRealm.close();
     }
 
     @Override
